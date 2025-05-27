@@ -7,12 +7,14 @@ import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useBestsellers } from "@/hooks/useBestSellers";
+import DiscountCard from "@/components/DiscountCard";
 
 
 export default function Home() {
   // Use the custom hook to get data, loading, and error states
   const { data: electronicsBestsellers, loading: electronicsLoading, error: electronicsError } = useBestsellers('electronics');
-  const { data: fashionBestsellers, loading: fashionLoading, error:fashionError } = useBestsellers('fashion');
+  const { data: fashionBestsellers, loading: fashionLoading, error: fashionError } = useBestsellers('fashion');
+  const { data: automotiveBestsellers, loading: automotiveLoading, error: automotiveError } = useBestsellers('automotive');
 
   return (
     <main className="overflow-y-scroll pb-10 scrollbar-hidden">
@@ -22,8 +24,8 @@ export default function Home() {
 
           <div className="w-[65%] h-full px-1">
             <GridOption
-              title="Watches and Wearable Devices"
-              image="/images/sampleRolex.png"
+              title="Affordable and top-line gadgets"
+              image="/images/sampleOculus.png"
               containerStyle="w-full h-full flex bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900"
               link=""
               titleStyle="text-5xl font-extrabold text-white"
@@ -112,10 +114,10 @@ export default function Home() {
       </div>
 
       {/* */}
-      <div className="w-full p-2">
+      <div className="w-full p-2 my-6">
 
         <div className="w-full h-[3rem] flex items-center justify-between">
-          <h1 className="font-bold text-xl">Best Selling Electronics</h1>
+          <h1 className="font-bold text-xl text-blue-700">Best Selling Electronics</h1>
           <div className="flex space-x-4">
             <p className="text-xs font-semibold">View All</p>
             <ChevronRight className="size-4 text-black font-semibold" />
@@ -167,12 +169,35 @@ export default function Home() {
 
       </div>
 
+      {/* discounts section */}
+      <div className="w-full h-[15rem] flex items-center justify-around my-4">
+        <DiscountCard
+          backgroundColor="bg-purple-900"
+          title="Air green aromatic humidifier"
+          discount="Up to 15% off"
+          image = "/images/sampleHumidifier.png"
+        />
+        <DiscountCard
+          backgroundColor="bg-cyan-600"
+          title="Apple airpod pros"
+          discount="Best deal on the market"
+          image ="/images/sampleAirpod.png"
+        />
+        <DiscountCard
+          backgroundColor="bg-green-600"
+          title="Silver Rolex g-250"
+          discount="Get 1 free for every 10"
+          image = "/images/sampleRolex.png"
+        />
+       
 
-      {/* */}
-      <div className="w-full p-2">
+      </div>
+
+      {/* fashion section */}
+      <div className="w-full p-2 my-4">
 
         <div className="w-full h-[3rem] flex items-center justify-between">
-          <h1 className="font-bold text-xl">Trending Fashion this week</h1>
+          <h1 className="font-bold text-xl text-blue-700">Trending Fashion this week</h1>
           <div className="flex space-x-4">
             <p className="text-xs font-semibold">View All</p>
             <ChevronRight className="size-4 text-black font-semibold" />
@@ -180,20 +205,7 @@ export default function Home() {
         </div>
 
         <div className="w-full py-4 flex items-center justify-around overflow-x-scroll overflow-y-hidden scrollbar-hidden">
-          {/* You can use the same useBestsellers hook for other categories here if needed */}
-          {/* For example:
-          {useBestsellers('fashion').loading && <p>Loading fashion...</p>}
-          {useBestsellers('fashion').data.map(product => (
-            <ProductCard
-              key={product.asin}
-              title={product.product_title}
-              price={product.product_price}
-              image={product.product_photo}
-            />
-          ))}
-          */}
-          
-          
+
           {fashionLoading && <p>Loading trending fashion items...</p>}
           {fashionError && <p className="text-red-500">Error: {fashionError}</p>}
           {!fashionLoading && !fashionError && fashionBestsellers.length === 0 && (
@@ -222,10 +234,59 @@ export default function Home() {
               return null;
             })
           )}
-         
+
         </div>
 
       </div>
+      {/*  */}
+
+
+      {/* */}
+      <div className="w-full p-2">
+
+        <div className="w-full h-[3rem] flex items-center justify-between">
+          <h1 className="font-bold text-xl text-blue-700">Best Automotive Deals</h1>
+          <div className="flex space-x-4">
+            <p className="text-xs font-semibold">View All</p>
+            <ChevronRight className="size-4 text-black font-semibold" />
+          </div>
+        </div>
+
+        <div className="w-full py-4 flex items-center justify-around overflow-x-scroll overflow-y-hidden scrollbar-hidden">
+
+          {automotiveLoading && <p>Loading trending automotive items...</p>}
+          {automotiveError && <p className="text-red-500">Error: {automotiveError}</p>}
+          {!automotiveLoading && !automotiveError && automotiveBestsellers.length === 0 && (
+            <p>No trending automotive deals found. </p>
+          )}
+          {!automotiveLoading && !automotiveError && automotiveBestsellers.length > 0 && (
+            automotiveBestsellers.map((product, index) => {
+              if (index <= 20) {
+                // Safely parse price and rating to numbers
+                const parsedPrice = parseFloat(product.product_price?.replace(/[^0-9.-]+/g, "") || "0");
+                const parsedRating = parseFloat(product.product_star_rating?.split(' ')[0] || "0");
+
+                const calculatedSlash = (parsedPrice && parsedRating) ?
+                  Math.round(parsedPrice - parsedRating).toString() : '';
+
+                return (
+                  <ProductCard
+                    title={product.product_title}
+                    price={product.product_price}
+                    image={product.product_photo}
+                    slash={calculatedSlash}
+                    key={product.product_url || product.asin || index}
+                  />
+                )
+              }
+              return null;
+            })
+          )}
+
+        </div>
+
+      </div>
+      {/*  */}
 
     </main>
   );
