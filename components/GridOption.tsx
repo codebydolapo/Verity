@@ -25,7 +25,7 @@ function GridOption({ title, image, imageStyle, containerStyle, link, titleStyle
         >
             <div className={`w-[50%] h-full flex flex-col items-start justify-center ${description ? "space-y-4 px-8" : "px-4"}`}>
                 <h1 className={titleStyle}>{title}</h1>
-                {description && <p className='text-sm text-white'>{description}</p>}
+                {description && <p className='text-sm font-extralight text-white'>{description}</p>}
                 <div className={`${description ? "bg-white font-bold text-black p-2" : "underline text-white"} rounded-sm`}>
                     <p className='text-xs'>Shop now!</p>
                 </div>
