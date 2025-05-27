@@ -55,6 +55,7 @@ function Header() {
         <header className='w-full h-[4rem] bg-[#181c2c] flex items-center justify-between p-2'>
             <Link className='h-full flex items-center justify-center' href="/">
                 <Image src="/icons/logo.webp" className="size-10 rounded-full" width={0} height={0} alt="" unoptimized />
+                <h1 className='text-white font-extrabold text-3xl mx-2'>Verity</h1>
             </Link>
             <div className='h-full flex flex-1 items-center justify-center'>
                 <div className='min-w-[50%] h-10 border-[1px] border-gray-600 rounded-lg flex items-center justify-center'>

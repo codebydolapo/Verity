@@ -1,54 +1,19 @@
+// pages/index.tsx
+"use client"
+
 import GridOption from "@/components/GridOption";
 import ProductCard from "@/components/ProductCard";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useBestsellers } from "@/hooks/useBestSellers";
 
-
-const dummyData = [
-  {
-    title: "Rolex g-750",
-    price: "2732",
-    tag: "Premium offer",
-    description: "",
-    slash: "23",
-    image: "/images/sampleRolex.png"
-  },
-  {
-    title: "Apple iPad 20",
-    price: "2453",
-    tag: "Free ahipping",
-    description: "",
-    slash: "54",
-    image: "/images/sampleIpad.png"
-  },
-  {
-    title: "Oraimo Smart Watch",
-    price: "1432",
-    tag: "Best Price",
-    description: "",
-    slash: "35",
-    image: "/images/sampleWatch.png"
-  },
-  {
-    title: "Sony XBox Controller",
-    price: "8233",
-    tag: "Free Shipping",
-    description: "",
-    slash: "24",
-    image: "/images/sampleGamepad.png"
-  },
-  {
-    title: "Go-Pro x20",
-    price: "2432",
-    tag: "Premium offer",
-    description: "",
-    slash: "45",
-    image: "/images/sampleCamera.png"
-  },
-]
 
 export default function Home() {
+  // Use the custom hook to get data, loading, and error states
+  const { data: electronicsBestsellers, loading: electronicsLoading, error: electronicsError } = useBestsellers('electronics');
+  const { data: fashionBestsellers, loading: fashionLoading, error:fashionError } = useBestsellers('fashion');
+
   return (
     <main className="overflow-y-scroll pb-10 scrollbar-hidden">
       <div className="flex flex-col p-2">
@@ -65,6 +30,8 @@ export default function Home() {
               description="Which can vary, depending on class, brand and model electronic devices"
               descriptionStyle=""
               imageStyle=""
+              category="watches"
+
             />
           </div>
 
@@ -78,6 +45,7 @@ export default function Home() {
               description=""
               descriptionStyle=""
               imageStyle=""
+              category="game console"
             />
             <GridOption
               title="Special discount, up to 50% off!"
@@ -88,6 +56,7 @@ export default function Home() {
               description=""
               descriptionStyle=""
               imageStyle=""
+              category="clothes"
             />
           </div>
 
@@ -103,6 +72,7 @@ export default function Home() {
             description=""
             descriptionStyle=""
             imageStyle=""
+            category="cameras"
           />
           <GridOption
             title="Apple Ipads"
@@ -113,6 +83,7 @@ export default function Home() {
             description=""
             descriptionStyle=""
             imageStyle=""
+            category="smartwatches"
           />
           <GridOption
             title="Smart watches"
@@ -123,6 +94,7 @@ export default function Home() {
             description=""
             descriptionStyle=""
             imageStyle=""
+            category="watches"
           />
           <GridOption
             title="Accessories"
@@ -133,17 +105,18 @@ export default function Home() {
             description=""
             descriptionStyle=""
             imageStyle=""
+            category="headsets"
           />
         </div>
 
       </div>
 
-      {/*  */}
+      {/* */}
       <div className="w-full p-2">
 
         <div className="w-full h-[3rem] flex items-center justify-between">
-          <h1 className="font-bold text-xl">Best Selling Items</h1>
-          <div className="flex soace-x-4">
+          <h1 className="font-bold text-xl">Best Selling Electronics</h1>
+          <div className="flex space-x-4">
             <p className="text-xs font-semibold">View All</p>
             <ChevronRight className="size-4 text-black font-semibold" />
           </div>
@@ -161,69 +134,95 @@ export default function Home() {
             </div>
             <Image src={"/images/samplePhones.png"} alt="" width={0} height={0} className='w-[50%] absolute -bottom-10 right-0' unoptimized />
           </div>
-          {
-            dummyData.map(({ title, price, tag, image, description, slash }) => {
-              return (
-                <ProductCard
-                  title={title}
-                  price={price}
-                  tag={tag}
-                  image={image}
-                  slash={slash}
-                  description={description}
-                  key={title}
-                />
-              )
+          {electronicsLoading && <p>Loading trending electronics...</p>}
+          {electronicsError && <p className="text-red-500">Error: {electronicsError}</p>}
+          {!electronicsLoading && !electronicsError && electronicsBestsellers.length === 0 && (
+            <p>No trending electronics found.</p>
+          )}
+          {!electronicsLoading && !electronicsError && electronicsBestsellers.length > 0 && (
+            electronicsBestsellers.map((product, index) => {
+              if (index <= 20) {
+                // Safely parse price and rating to numbers
+                const parsedPrice = parseFloat(product.product_price?.replace(/[^0-9.-]+/g, "") || "0");
+                const parsedRating = parseFloat(product.product_star_rating?.split(' ')[0] || "0");
+
+                const calculatedSlash = (parsedPrice && parsedRating) ?
+                  Math.round(parsedPrice - parsedRating).toString() : '';
+
+                return (
+                  <ProductCard
+                    title={product.product_title}
+                    price={product.product_price}
+                    image={product.product_photo}
+                    slash={calculatedSlash}
+                    key={product.product_url || product.asin || index}
+                  />
+                )
+              }
+              return null;
             })
-          }
+          )}
 
         </div>
 
       </div>
 
 
-      {/*  */}
+      {/* */}
       <div className="w-full p-2">
 
         <div className="w-full h-[3rem] flex items-center justify-between">
-          <h1 className="font-bold text-xl">Trending this week</h1>
-          <div className="flex soace-x-4">
+          <h1 className="font-bold text-xl">Trending Fashion this week</h1>
+          <div className="flex space-x-4">
             <p className="text-xs font-semibold">View All</p>
             <ChevronRight className="size-4 text-black font-semibold" />
           </div>
         </div>
 
         <div className="w-full py-4 flex items-center justify-around overflow-x-scroll overflow-y-hidden scrollbar-hidden">
-          {
-            dummyData.map(({ title, price, tag, image, description, slash }) => {
-              return (
-                <ProductCard
-                  title={title}
-                  price={price}
-                  tag={tag}
-                  image={image}
-                  slash={slash}
-                  description={description}
-                  key={title}
-                />
-              )
+          {/* You can use the same useBestsellers hook for other categories here if needed */}
+          {/* For example:
+          {useBestsellers('fashion').loading && <p>Loading fashion...</p>}
+          {useBestsellers('fashion').data.map(product => (
+            <ProductCard
+              key={product.asin}
+              title={product.product_title}
+              price={product.product_price}
+              image={product.product_photo}
+            />
+          ))}
+          */}
+          
+          
+          {fashionLoading && <p>Loading trending fashion items...</p>}
+          {fashionError && <p className="text-red-500">Error: {fashionError}</p>}
+          {!fashionLoading && !fashionError && fashionBestsellers.length === 0 && (
+            <p>No trending fashion found.</p>
+          )}
+          {!fashionLoading && !fashionError && fashionBestsellers.length > 0 && (
+            fashionBestsellers.map((product, index) => {
+              if (index <= 20) {
+                // Safely parse price and rating to numbers
+                const parsedPrice = parseFloat(product.product_price?.replace(/[^0-9.-]+/g, "") || "0");
+                const parsedRating = parseFloat(product.product_star_rating?.split(' ')[0] || "0");
+
+                const calculatedSlash = (parsedPrice && parsedRating) ?
+                  Math.round(parsedPrice - parsedRating).toString() : '';
+
+                return (
+                  <ProductCard
+                    title={product.product_title}
+                    price={product.product_price}
+                    image={product.product_photo}
+                    slash={calculatedSlash}
+                    key={product.product_url || product.asin || index}
+                  />
+                )
+              }
+              return null;
             })
-          }
-          {
-            dummyData.map(({ title, price, tag, image, description, slash }) => {
-              return (
-                <ProductCard
-                  title={title}
-                  price={price}
-                  tag={tag}
-                  image={image}
-                  slash={slash}
-                  description={description}
-                  key={title}
-                />
-              )
-            })
-          }
+          )}
+         
         </div>
 
       </div>
