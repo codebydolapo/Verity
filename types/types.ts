@@ -29,3 +29,61 @@ export interface BestsellersApiResponse {
     domain: string;
   };
 }
+
+// src/types.ts
+
+// ... (keep your BestsellerProduct and BestsellersApiResponse interfaces)
+
+// --- UPDATED New Types for Search Results ---
+
+/**
+ * Defines the shape of a single product item from the search API response.
+ * THIS IS THE PART THAT NEEDS TO BE ACCURATE BASED ON YOUR REAL API RESPONSE.
+ */
+export interface SearchProduct {
+  product_asin: string;
+  product_title: string;
+  product_price: string;
+  product_photo: string;
+  price?: { // Price is often an object with structured details
+    symbol?: string; // e.g., "$"
+    value?: number; // e.g., 299.99
+    currency?: string; // e.g., "USD"
+    raw?: string; // e.g., "$299.99" - useful for direct display
+  };
+  // Alternative if price is a simple string directly on the product object:
+  // product_price?: string;
+
+  rating?: number; // Numerical star rating (e.g., 4.5)
+  ratings_total?: number; // Total number of ratings/reviews
+  is_prime?: boolean; // Whether it's a Prime eligible item
+  // Add other properties you might see and use, e.g.:
+  // category?: string;
+  // brand?: string;
+  // deal_of_the_day?: boolean;
+  // sponsored?: boolean;
+  // availability_status?: string;
+}
+
+/**
+ * Defines the overall structure of the API response for the search endpoint.
+ * This directly corresponds to the root object in your schema.
+ */
+export interface SearchApiResponse {
+  status: string;
+  request_id: string;
+  parameters: { // Added based on your provided schema
+    query: string;
+    country: string;
+    sort_by: string;
+    page: number;
+    is_prime: boolean;
+  };
+  data: {
+    total_products: number; // This is the total number of results found
+    country: string;
+    domain: string;
+    products: SearchProduct[]; // Now explicitly an array of SearchProduct
+  };
+}
+

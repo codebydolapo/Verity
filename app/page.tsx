@@ -8,6 +8,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useBestsellers } from "@/hooks/useBestSellers";
 import DiscountCard from "@/components/DiscountCard";
+import RecommendationCard from "@/components/RecommendationCard";
+import { useState } from "react";
+import recommendationData from "@/data/recommendationData";
 
 
 export default function Home() {
@@ -16,15 +19,20 @@ export default function Home() {
   const { data: fashionBestsellers, loading: fashionLoading, error: fashionError } = useBestsellers('fashion');
   const { data: automotiveBestsellers, loading: automotiveLoading, error: automotiveError } = useBestsellers('automotive');
 
+  const [activeCategory, setActiveCategory] = useState('Accessories');
+  const categories = ['Accessories', 'Mobile Phones', 'Electronics', "Wears"];
+
+
+
   return (
-    <main className="overflow-y-scroll pb-10 scrollbar-hidden">
+    <main className="overflow-y-scroll pb-10 scrollbar-hidden px-4">
       <div className="flex flex-col p-2">
 
         <div className="w-full h-[27rem] flex items-center justify-between">
 
           <div className="w-[65%] h-full px-1">
             <GridOption
-              title="Affordable and top-line gadgets"
+              title="Affordable and top-line gadgets!"
               image="/images/sampleOculus.png"
               containerStyle="w-full h-full flex bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900"
               link=""
@@ -50,7 +58,7 @@ export default function Home() {
               category="game console"
             />
             <GridOption
-              title="Special discount, up to 50% off!"
+              title="Shop for wears on Verity!"
               image="/images/sampleClothes.png"
               containerStyle="w-full h-[49%] flex bg-gradient-to-r from-purple-800 to-[#2D80B5]"
               link=""
@@ -175,21 +183,21 @@ export default function Home() {
           backgroundColor="bg-purple-900"
           title="Air green aromatic humidifier"
           discount="Up to 15% off"
-          image = "/images/sampleHumidifier.png"
+          image="/images/sampleHumidifier.png"
         />
         <DiscountCard
           backgroundColor="bg-cyan-600"
           title="Apple airpod pros"
           discount="Best deal on the market"
-          image ="/images/sampleAirpod.png"
+          image="/images/sampleAirpod.png"
         />
         <DiscountCard
           backgroundColor="bg-green-600"
           title="Silver Rolex g-250"
           discount="Get 1 free for every 10"
-          image = "/images/sampleRolex.png"
+          image="/images/sampleRolex.png"
         />
-       
+
 
       </div>
 
@@ -240,8 +248,42 @@ export default function Home() {
       </div>
       {/*  */}
 
+      {/* experimental */}
 
-      {/* */}
+      <div className="  text-black-700 p-8">
+        <div className="mx-auto">
+          <h2 className="text-xl font-semibold mb-6">Recommended for You</h2>
+
+
+          <div className="flex space-x-4 mb-8">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`px-4 py-2 rounded-md transition-colors duration-200 text-xs ${activeCategory === category
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {recommendationData[activeCategory] && recommendationData[activeCategory].map((recommendationData) => (
+              <RecommendationCard key={recommendationData.id} product={recommendationData} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+
+      {/*  */}
+
+
+      {/* automotives section */}
       <div className="w-full p-2">
 
         <div className="w-full h-[3rem] flex items-center justify-between">

@@ -17,7 +17,7 @@ type Props = {
 function GridOption({ title, image, imageStyle, containerStyle, link, titleStyle, descriptionStyle, description, category }: Props) {
     return (
         <Link
-            className={`${containerStyle} cursor-pointer rounded-lg`}
+            className={`${containerStyle} cursor-pointer flex items-center justify-between rounded-lg`}
             href={{
                 pathname: "/search",
                 query: { q: category }
@@ -30,8 +30,19 @@ function GridOption({ title, image, imageStyle, containerStyle, link, titleStyle
                     <p className='text-xs'>Shop now!</p>
                 </div>
             </div>
-            <div className='w-[50%] h-full flex items-center justify-center'>
-                <Image src={image} alt="" width={0} height={0} className='w-[80%]' unoptimized />
+            <div className='w-[50%] min-h-[90%] flex flex-shrink-0 relative' style={{ position: "relative" }}>
+                {/* <div className='block'> */}
+
+                <Image
+                    src={image} alt=""
+                    style={{ objectFit: "contain" }}
+                    width={0}
+                    height={0}
+                    // objectFit="contain" // Keep aspect ratio, fit within bounds
+                    className="max-w-[75%] min-h-[1rem] flex-1"
+                    unoptimized
+                />
+                {/* </div> */}
             </div>
         </Link>
     )
