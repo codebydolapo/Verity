@@ -1,5 +1,5 @@
 // Import your new types
-import { BestsellersApiResponse, SearchApiResponse } from '../types/types';
+import { BestsellersApiResponse, ProductDetailsApiResponse, SearchApiResponse } from '../types/types';
 import { BestsellerProduct, SearchProduct } from '../types/types'; // Also import the item types for product arrays
 
 
@@ -152,4 +152,60 @@ export async function fetchSearchResults(query: string, page: number = 1): Promi
         }
         return null;
     }
+}
+
+
+
+// src/lib/fetchProducts.ts
+
+// (Keep existing imports and constants)
+
+
+
+// ... (your existing fetchBestsellers and fetchSearchResults functions)
+
+/*
+ * Fetches details for a specific product by its ASIN.
+ */
+export async function fetchProductDetails(asin: string): Promise<ProductDetailsApiResponse | null> {
+  if (!RAPIDAPI_KEY) {
+    console.error("RapidAPI key is not defined. Please set NEXT_PUBLIC_RAPIDAPI_KEY environment variable.");
+    return null;
+  }
+
+  const url = new URL(`${API_BASE_URL}/product-details`);
+  url.searchParams.append('asin', asin);
+  url.searchParams.append('country', 'US'); // Default to US, adjust if needed
+
+  const options: RequestInit = {
+    method: 'GET',
+    headers: {
+      'x-rapidapi-key': RAPIDAPI_KEY,
+      'x-rapidapi-host': API_HOST,
+      'Content-Type': 'application/json',
+    }
+  };
+
+  try {
+    const response = await fetch(url.toString(), options);
+    if (!response.ok) {
+      let errorDetails = `API Error for product details (ASIN: ${asin}): ${response.status} ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        console.error(errorDetails, errorData);
+      } catch (jsonError) {
+        console.error(errorDetails, "Could not parse error response as JSON.");
+      }
+      return null;
+    }
+    const result: ProductDetailsApiResponse = await response.json();
+    return result;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`Failed to fetch product details for ASIN ${asin}:`, error.message);
+    } else {
+      console.error(`An unknown error occurred while fetching product details for ASIN ${asin}:`, error);
+    }
+    return null;
+  }
 }

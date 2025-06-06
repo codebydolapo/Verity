@@ -41,6 +41,7 @@ export interface BestsellersApiResponse {
  * THIS IS THE PART THAT NEEDS TO BE ACCURATE BASED ON YOUR REAL API RESPONSE.
  */
 export interface SearchProduct {
+  asin: string;
   product_asin: string;
   product_title: string;
   product_price: string;
@@ -87,3 +88,56 @@ export interface SearchApiResponse {
   };
 }
 
+/**
+ * Defines the structure of the 'product_information' object.
+ * This is a dynamic object with varying keys, so we'll use an index signature.
+ */
+export interface ProductInformation {
+  // [key: string]: string; // Allows for any string key with a string value
+  asin: string;
+  product_title: string;
+  product_price: string;
+  product_original_price: string; // explicitly null based on schema
+  product_price_max: string;
+  currency: string;
+  country: string;
+  product_byline: string;
+  product_byline_link: string;
+  product_star_rating: string;
+  product_num_ratings: number | string;
+  product_url: string;
+  product_slug: string;
+  product_photo: string;
+  product_availability: string;
+  is_best_seller: boolean;
+  is_amazon_choice: boolean;
+  is_prime: boolean;
+  climate_pledge_friendly: boolean;
+  sales_volume: string;
+  about_product: string[];
+  product_description: string;
+  product_information: {
+    "Product Dimensions": string;
+    "Item Weight": string;
+    "ASIN": string;
+    "Item model number": string;
+    "B07ZPJWGKZ": {
+      size: string;
+      color: string;
+      service_provider: string;
+      product_grade: string;
+    };
+  };
+  has_aplus: boolean;
+  has_brandstory: boolean;
+}
+
+export interface ProductDetailsApiResponse {
+  status: string;
+  request_id: string;
+  parameters: {
+    asin: string;
+    country: string;
+  };
+  data: ProductInformation; // This will hold the actual product details
+}

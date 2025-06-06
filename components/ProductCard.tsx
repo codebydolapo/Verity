@@ -1,49 +1,89 @@
-import React from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Crown } from 'lucide-react'
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Crown } from 'lucide-react';
+import { SearchProduct, BestsellerProduct } from '@/types/types'; // Import your product types
 
-interface Props {
+interface ProductCardProps {
     title: string;
     price: string;
-    tag: string;
     image: string;
-    description: string;
-    slash: string
+    slash: string;
+    asin: string;
+    product_star_rating?: string;
+    product_url?: string;
+    tag?: string;
+    description?: string;
 }
 
-function ProductCard({ image, price, product_star_rating, title, product_url, slash }: any) {
+function ProductCard({ image, price, title, slash, asin }: ProductCardProps) {
+    // Determine if the price is a discount based on the slash percentage
+    const hasDiscount = parseFloat(slash || '0') > 0;
+    const originalPrice = hasDiscount
+        ? (parseFloat(price.replace(/[^0-9.]/g, '')) / (1 - parseFloat(slash) / 100)).toFixed(2) // Calculate original price if discounted
+        : null;
+
     return (
-        <div className="max-w-[16rem] min-w-[16rem] h-[25rem] bg-white flex flex-col items-center justify-between relative rounded-xl mx-2 cursor-pointer transition delay-120 duration-200 ease-in-out hover:-translate-y-1 hover:scale-105">
-            <div className='w-full h-[70%] bg-gray-200 relative rounded-2xl flex items-center justify-center p-2'>
-                <div className='w-full h-full flex flex-shrink-0 relative items-center justify-center bg-white rounded-xl'>
-                    <Image 
+        <Link
+            className="group relative flex flex-col items-center justify-between 
+                       w-full md:max-w-[16rem] md:min-w-[15rem] max-w-[42vw] min-w-[42vw] h-[22rem] md:h-[25rem]
+                       bg-white rounded-xl shadow-lg hover:shadow-xl
+                       md:mx-2 mx-1 overflow-hidden
+                       transform transition-all duration-300 ease-in-out
+                       hover:-translate-y-1 hover:scale-105"
+            href={`/products/${asin}`}
+        >
+            {/* Image Container */}
+            <div className="relative w-full h-[65%] flex items-center justify-center md:p-4 p-2 bg-gray-50 rounded-t-xl overflow-hidden">
+                <Image
                     src={image}
-                    alt = "" 
+                    alt={title || "Product image"}
+                    width={200} // Set a fixed width for the image to optimize more
+                    height={200} // Set a fixed height for the image to optimize more
                     style={{ objectFit: "contain" }}
-                    width={0}
-                    height={0}
-                    // objectFit="contain" // Keep aspect ratio, fit within bounds
-                    className="max-w-[75%] max-h-[95%] flex-1"
-                    unoptimized
-                    />
-                </div>
-                    <div className='absolute top-0 right-0 bg-gray-200 w-8 h-8 rounded-full flex items-center justify-center'>
-                        <Crown fill='#eab308' className='size-5 text-yellow-500' />
-                    </div>
-                    <div className='rounded-xl absolute bottom-0 right-0 bg-gray-200 py-2 px-4'>
-                        <p className='text-xs text-green-600 bg-gray-200 font-semibold '>{price}</p>
-                    </div>
-            </div>
-            <div className='w-full h-[23%] flex flex-col items-start justify-between rounded-lg bg-white p-2'>
-                <p className='text-sm font-semibold truncate w-full p-2 rounded-lg bg-gray-200 text-blue-900'>{title}</p>
-                <div className='w-full bg-white flex justify-between items-center'>
-                    <p className='text-xs font-light truncate min-w-[60%] p-2 rounded-lg bg-gray-200'>"Best Seller"</p>
-                    <p className='text-xs font-light truncate p-2 rounded-lg bg-gray-200 text-red-600'>-{slash}%</p>
+                    className="max-w-[85%] max-h-[90%] transition-transform duration-300 group-hover:scale-105"
+                    unoptimized={false} // Allow Next.js to optimize if configured in next.config.js
+                />
+                {/* Best Seller Crown */}
+                <div className="absolute top-2 right-2 bg-yellow-500 p-1.5 rounded-full shadow-md">
+                    <Crown fill='white' className='size-4 text-white' />
                 </div>
             </div>
-        </div>
-    )
+
+            {/* Product Details Section */}
+            <div className="flex flex-col w-full h-[35%] md:p-4 p-2 bg-white rounded-b-xl justify-between">
+                {/* Title */}
+                <h3 className="text-md md:text-lg font-semibold text-gray-800 line-clamp-2 leading-tight mb-2 truncate">
+                    {title}
+                </h3>
+
+                {/* Price and Discount */}
+                <div className="flex items-baseline justify-between w-full mt-auto">
+                    <div className="flex items-center justify-center space-x-2">
+                        <p className="text-md md:text-xl font-bold text-green-700">
+                            {price}
+                        </p>
+                        {hasDiscount && originalPrice && (
+                            <p className="text-xs text-gray-500 line-through">
+                                ${originalPrice} {/* Display original price if calculated */}
+                            </p>
+                        )}
+                    </div>
+                    {hasDiscount && (
+                        <span className="bg-red-100 text-red-600 md:text-xs text-[0.5rem] font-semibold px-2.5 py-0.5 rounded-full">
+                            -{slash}%
+                        </span>
+                    )}
+                </div>
+
+                {/* "Best Seller" Tag - Moved to be more integrated */}
+                {/* Consider if this tag should always be present or only if applicable */}
+                <div className="w-fit mt-2 bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full self-start">
+                    Best Seller
+                </div>
+            </div>
+        </Link>
+    );
 }
 
-export default ProductCard
+export default ProductCard;

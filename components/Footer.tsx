@@ -13,14 +13,14 @@ function Footer() {
 
 
     return (
-        <div className='w-full h-[20rem] mt-10 bg-[#181c2c] flex'>
-            <div className="w-1/3 h-full flex items-center justify-center">
+        <div className='w-full md:h-[20rem] mt-10 bg-[#181c2c] flex md:flex-row flex-col py-4 px-2 md:space-y-0 space-y-6'>
+            <div className="md:w-1/3 w-full h-full flex items-center justify-center">
                 <Link className='h-full flex items-center justify-center' href="/">
-                    <Image src="/icons/logo.webp" className="size-14 rounded-full" width={0} height={0} alt="" unoptimized />
-                    <h1 className='text-white font-extrabold text-5xl mx-2'>Verity</h1>
+                    <Image src="/icons/logo.webp" className="md:size-14 size-10 rounded-full" width={0} height={0} alt="" unoptimized />
+                    <h1 className='text-white font-extrabold md:text-5xl text-3xl mx-2'>Verity</h1>
                 </Link>
             </div>
-            <div className="w-1/3 h-full flex flex-col items-start justify-center p-2 space-y-2">
+            <div className="md:w-1/3 w-full h-full flex flex-col items-start justify-center md:p-2 space-y-2">
                 <p className='text-white font-extrabold text-lg'>New to Verity?</p>
                 <p className='text-white font-extralight text-[0.6rem]'>Subscribe to our newsletter to get updates on our latest offers!</p>
                 <div className='w-full flex items-center justify-center '>
@@ -37,8 +37,8 @@ function Footer() {
                 <p className='text-white font-extralight text-[0.6rem] mt-6'>Only fill if you agree to Verity's Privacy and Cookie Policy. You can unsubscribe from newsletters at any time.</p>
 
             </div>
-            <div className="w-1/3 h-full flex flex-col items-center justify-center">
-                <div className='min-w-[15rem] flex flex-col items-start justify-center  '>
+            <div className="md:w-1/3 w-full h-full flex flex-col items-center justify-center">
+                <div className='md:min-w-[15rem] min-w-full flex flex-col items-start justify-center  '>
 
                     <Link className='flex items-center justify-center' href="/">
                         {/* <Image src="/icons/logo.webp" className="size-8 rounded-full" width={0} height={0} alt="" unoptimized /> */}

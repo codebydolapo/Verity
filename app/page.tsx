@@ -25,36 +25,36 @@ export default function Home() {
 
 
   return (
-    <main className="overflow-y-scroll pb-10 scrollbar-hidden px-4">
-      <div className="flex flex-col p-2">
+    <main className="overflow-y-scroll pb-10 scrollbar-hidden md:px-4 px-0 py-2">
+      <div className="flex flex-col">
 
-        <div className="w-full h-[27rem] flex items-center justify-between">
+        <div className="w-full md:h-[27rem] h-[17rem] flex md:flex-row flex-col items-center md:justify-between justify-around">
 
-          <div className="w-[65%] h-full px-1">
+          <div className="md:w-[65%] w-full md:h-full h-[15rem] px-1">
             <GridOption
               title="Affordable and top-line gadgets!"
               image="/images/sampleOculus.png"
               containerStyle="w-full h-full flex bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900"
               link=""
-              titleStyle="text-5xl font-extrabold text-white"
+              titleStyle="md:text-5xl text-xl font-extrabold text-white"
               description="Which can vary, depending on class, brand and model electronic devices"
-              descriptionStyle=""
-              imageStyle=""
+              descriptionStyle="md:text-sm text-xs font-extralight text-white"
+              imageStyle="max-w-[75%] min-h-[1rem] flex-1"
               category="watches"
 
             />
           </div>
 
-          <div className="w-[35%] h-full flex flex-col items-center justify-between px-1">
+          <div className="md:w-[35%] w-full md:h-full h-[30rem] flex-col items-center justify-between px-1 md:flex hidden">
             <GridOption
               title="Special discount, up to 50% off!"
               image="/images/sampleGamepad.png"
-              containerStyle="w-full h-[49%]  flex bg-gradient-to-r from-[#6E44FF] to-fuchsia-900"
+              containerStyle="w-full h-[49%] flex bg-gradient-to-r from-[#6E44FF] to-fuchsia-900"
               link=""
               titleStyle="text-lg font-extrabold text-white"
               description=""
               descriptionStyle=""
-              imageStyle=""
+              imageStyle="max-w-[75%] min-h-[1rem] flex-1"
               category="game console"
             />
             <GridOption
@@ -65,56 +65,56 @@ export default function Home() {
               titleStyle="text-lg font-extrabold text-white"
               description=""
               descriptionStyle=""
-              imageStyle=""
+              imageStyle="max-w-[75%] min-h-[1rem] flex-1"
               category="clothes"
             />
           </div>
 
         </div>
 
-        <div className="w-full h-[11rem] flex items-center justify-between mt-2">
+        <div className="w-full h-[11rem] flex items-center justify-between mt-2 md:overflow-hidden overflow-x-scroll">
           <GridOption
             title="Hero Cameras"
             image="/images/sampleCamera.png"
-            containerStyle="w-[24.5%] h-full flex bg-[#6E44FF]"
+            containerStyle="md:w-[24.5%] md:min-w-[24.5%] min-w-[90vw] h-full flex bg-[#6E44FF] md:mx-0 mx-3"
             link=""
             titleStyle="text-lg font-extrabold text-white"
             description=""
             descriptionStyle=""
-            imageStyle=""
+            imageStyle="max-w-[75%] min-h-[1rem] flex-1"
             category="cameras"
           />
           <GridOption
             title="Apple Ipads"
             image="/images/sampleIpad.png"
-            containerStyle="w-[24.5%] h-full flex bg-[#2D80B5]"
+            containerStyle="md:w-[24.5%] md:min-w-[24.5%] min-w-[90vw] h-full flex bg-[#2D80B5] md:mx-0 mr-3"
             link=""
             titleStyle="text-lg font-extrabold text-white"
             description=""
             descriptionStyle=""
-            imageStyle=""
+            imageStyle="max-w-[75%] min-h-[1rem] flex-1"
             category="smartwatches"
           />
           <GridOption
             title="Smart watches"
             image="/images/sampleWatch.png"
-            containerStyle="w-[24.5%] h-full flex bg-[#332E3A]"
+            containerStyle="md:w-[24.5%] md:min-w-[24.5%] min-w-[90vw] h-full flex bg-[#332E3A] md:mx-0 mr-3"
             link=""
             titleStyle="text-lg font-extrabold text-white"
             description=""
             descriptionStyle=""
-            imageStyle=""
+            imageStyle="max-w-[75%] min-h-[1rem] flex-1"
             category="watches"
           />
           <GridOption
             title="Accessories"
             image="/images/sampleHeadset.png"
-            containerStyle="w-[24.5%] h-full flex bg-purple-900"
+            containerStyle="md:w-[24.5%] md:min-w-[24.5%] min-w-[90vw] h-full flex bg-purple-900 md:mx-0 mr-3"
             link=""
             titleStyle="text-lg font-extrabold text-white"
             description=""
             descriptionStyle=""
-            imageStyle=""
+            imageStyle="max-w-[75%] min-h-[1rem] flex-1"
             category="headsets"
           />
         </div>
@@ -134,16 +134,21 @@ export default function Home() {
 
         <div className="w-full py-4 flex items-center justify-around overflow-x-scroll overflow-y-hidden scrollbar-hidden">
 
-          <div className="max-w-[24rem] min-w-[24rem] h-[25rem] bg-blue-900 p-4 flex relative rounded-xl mx-2">
+          <Link className="md:max-w-[24rem] md:min-w-[24rem] min-w-[18rem] md:h-[25rem] h-[22rem] bg-blue-900 p-4 flex relative rounded-xl mx-2"
+            href={{
+              pathname: "/search",
+              query: { q: "smartphones" }
+            }}
+          >
             <div className="flex flex-col">
-              <h1 className="font-bold text-white text-3xl">Hot Collection!</h1>
-              <p className="text-sm text-white">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error minima reprehenderit iste.</p>
-              <Link className="w-[6rem] border-2 bg-white font-bold text-black p-2 rounded-sm mt-5" href="">
+              <h1 className="font-bold text-white md:text-3xl text-xl">Hot Collection!</h1>
+              <p className="md:text-sm text-xs text-white">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error minima reprehenderit iste.</p>
+              <button className="w-[6rem] border-2 bg-white font-bold text-black p-2 rounded-sm mt-5">
                 <p className='text-xs'>Shop now!</p>
-              </Link>
+              </button>
             </div>
-            <Image src={"/images/samplePhones.png"} alt="" width={0} height={0} className='w-[50%] absolute -bottom-10 right-0' unoptimized />
-          </div>
+            <Image src={"/images/samplePhones.png"} alt="" width={0} height={0} className='w-[60%] absolute -bottom-10 right-0' unoptimized />
+          </Link>
           {electronicsLoading && <p>Loading trending electronics...</p>}
           {electronicsError && <p className="text-red-500">Error: {electronicsError}</p>}
           {!electronicsLoading && !electronicsError && electronicsBestsellers.length === 0 && (
@@ -166,6 +171,7 @@ export default function Home() {
                     image={product.product_photo}
                     slash={calculatedSlash}
                     key={product.product_url || product.asin || index}
+                    asin={product.asin}
                   />
                 )
               }
@@ -178,24 +184,27 @@ export default function Home() {
       </div>
 
       {/* discounts section */}
-      <div className="w-full h-[15rem] flex items-center justify-around my-4">
+      <div className="max-w-full md:h-[15rem] h-[13rem] flex md:overflow-hidden overflow-x-scroll scrolbar-hidden items-center justify-around my-4">
         <DiscountCard
           backgroundColor="bg-purple-900"
           title="Air green aromatic humidifier"
           discount="Up to 15% off"
           image="/images/sampleHumidifier.png"
+          category="humidifier"
         />
         <DiscountCard
           backgroundColor="bg-cyan-600"
           title="Apple airpod pros"
           discount="Best deal on the market"
           image="/images/sampleAirpod.png"
+          category="airpod"
         />
         <DiscountCard
           backgroundColor="bg-green-600"
           title="Silver Rolex g-250"
           discount="Get 1 free for every 10"
           image="/images/sampleRolex.png"
+          category="rolex"
         />
 
 
@@ -236,6 +245,7 @@ export default function Home() {
                     image={product.product_photo}
                     slash={calculatedSlash}
                     key={product.product_url || product.asin || index}
+                    asin={product.asin}
                   />
                 )
               }
@@ -261,8 +271,8 @@ export default function Home() {
                 key={category}
                 onClick={() => setActiveCategory(category)}
                 className={`px-4 py-2 rounded-md transition-colors duration-200 text-xs ${activeCategory === category
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                   }`}
               >
                 {category}
@@ -318,6 +328,7 @@ export default function Home() {
                     image={product.product_photo}
                     slash={calculatedSlash}
                     key={product.product_url || product.asin || index}
+                    asin={product.asin}
                   />
                 )
               }

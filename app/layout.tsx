@@ -21,9 +21,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scrollbar-hidden">
+    <html lang="en" className="w-[100vw] scrollbar-hidden overflow-x-hidden">
       <body
-        className={`${poppins.className} scrollbar-hidden`}
+        className={`${poppins.className} w-[100vw] overflow-x-hidden`}
       >
         <Header />
         {children}

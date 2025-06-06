@@ -2,9 +2,12 @@ import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
-function DiscountCard({ backgroundColor, discount, title, image }: any) {
+function DiscountCard({ backgroundColor, discount, title, image, category }: any) {
     return (
-        <Link href="" className={`w-[32.5%] rounded-lg h-full flex ${backgroundColor}`}>
+        <Link href={{
+            pathname: "/search",
+            query: { q: category }
+        }} className={`md:w-[32.5%] md:min-w-[32.5%] min-w-[90vw] md:mr-0 mx-2 rounded-lg h-full flex ${backgroundColor}`}>
             <div className='w-[60%] h-full flex flex-col items-start justify-center space-y-2 p-4'>
                 <p className='text-white text-xs'>{discount}</p>
                 <h1 className='text-white text-2xl font-semibold'>{title}</h1>

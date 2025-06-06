@@ -1,12 +1,18 @@
 // components/ProductCard.js
 import { ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function RecommendationCard({ product }: any) {
     return (
-        <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden flex items-center p-4">
+        <Link className="bg-gray-800 rounded-lg shadow-md overflow-hidden flex items-center p-4"
+            href={{
+                pathname: "/search",
+                query: { q: product.name }
+            }}
+        >
             {/* Product Image */}
-            <div className="w-16 h-16 flex-shrink-0 relative" style={{position:"relative"}}>
+            <div className="w-16 h-16 flex-shrink-0 relative" style={{ position: "relative" }}>
                 <Image
                     src={product.image}
                     alt={product.name}
@@ -36,8 +42,8 @@ export default function RecommendationCard({ product }: any) {
             </div>
 
             <button className="flex-shrink-0 ml-4 p-2 rounded-full bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
-                        <ShoppingBag className='size-6 text-white' />
+                <ShoppingBag className='size-6 text-white' />
             </button>
-        </div>
+        </Link>
     );
 }

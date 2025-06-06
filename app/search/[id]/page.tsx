@@ -1,22 +1,24 @@
-"use client"; 
+"use client";
 
 import ProductCard from '@/components/ProductCard';
 import Image from 'next/image';
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import { useSearchResults } from '@/hooks/useSearchResults';
-import { SearchProduct } from '@/types/types'; 
-import { usePathname } from 'next/navigation'; 
+import { SearchProduct } from '@/types/types';
+import { usePathname } from 'next/navigation';
 
 interface SearchPageProps {
-    params: { id: string }; 
+    params: { id: string };
 }
 
 export default function SearchPage({ params }: SearchPageProps) {
-    
-    const initialQuery = params.id ? decodeURIComponent(params.id) : 'watches'; //remember to remove this
+    const pathname = usePathname();
+      const initialQuery = pathname.split('/').pop() || "watches"; //remember to remove this
+
+    // const initialQuery = params.id ? decodeURIComponent(params.id) : 'watches'; //remember to remove this
 
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [searchQuery, setSearchQuery] = useState<string>(initialQuery); 
+    const [searchQuery, setSearchQuery] = useState<string>(initialQuery);
 
     // Use the custom hook to fetch data
     const {
@@ -27,14 +29,19 @@ export default function SearchPage({ params }: SearchPageProps) {
     } = useSearchResults(searchQuery, currentPage);
 
     // Update the search query state if the URL param changes (e.g., navigating from /search/watches to /search/phones)
-    const pathname = usePathname();
+    // const pathname = usePathname();
     useEffect(() => {
-        const newQueryFromParams = params.id ? decodeURIComponent(params.id) : '';
-        if (newQueryFromParams !== searchQuery) {
-            setSearchQuery(newQueryFromParams);
+        // const newQueryFromParams = params.id ? decodeURIComponent(params.id) : '';
+        // if (newQueryFromParams !== searchQuery) {
+        //     setSearchQuery(newQueryFromParams);
+        //     setCurrentPage(1); // Reset page when query changes
+        // }
+        // const newQueryFromParams = params.id ? decodeURIComponent(params.id) : '';
+        if (initialQuery !== searchQuery) {
+            setSearchQuery(initialQuery);
             setCurrentPage(1); // Reset page when query changes
         }
-    }, [params.id, searchQuery]);
+    }, [initialQuery, searchQuery]);
 
 
     // Handle pagination clicks
@@ -53,31 +60,31 @@ export default function SearchPage({ params }: SearchPageProps) {
 
 
     return (
-        <div className='min-h-[90vh] px-4'>
+        <div className='min-h-[90vh] md:px-4 px-2'>
             <div className='relative w-full min-h-[15rem] flex flex-col items-center justify-center space-y-2 text-white overflow-hidden'>
                 <Image
-                    src="/images/searchBackground.jpeg" 
+                    src="/images/searchBackground.jpeg"
                     alt="Search background"
-                    layout="fill" 
+                    layout="fill"
                     objectFit="cover"
-                    quality={100} 
+                    quality={100}
                     priority // Preload this image if it's above the fold
                     className="z-0" // Ensure it's behind the text
                 />
 
                 {/* Dark Overlay for text */}
-                <div className="absolute inset-0 bg-black opacity-20 z-10 h-full"></div> 
+                <div className="absolute inset-0 bg-black opacity-20 z-10 h-full"></div>
 
                 <div className="relative z-20 flex flex-col items-center space-y-2"> {/* Ensures text is above image and overlay */}
                     <p className='text-md'>Search results for</p>
                     <h1 className='text-7xl font-bold truncate'>{searchQuery || '...'}</h1>
                     {totalResults !== null && (
-                         <p className='text-sm text-gray-200'>{totalResults} results found</p>
+                        <p className='text-sm text-gray-200'>{totalResults} results found</p>
                     )}
                 </div>
             </div>
 
-            <div className='min-h-[50vh] flex flex-wrap items-center justify-around mt-4 p-4 gap-6'>
+            <div className='min-h-[50vh] flex flex-wrap items-center justify-around mt-4 md:p-4 p-2 md:gap-6 gap-3'>
                 {loading && <p className="text-center w-full">Loading search results...</p>}
                 {error && <p className="text-center w-full text-red-500">Error: {error}</p>}
                 {!loading && !error && searchResults.length === 0 && (
@@ -87,13 +94,13 @@ export default function SearchPage({ params }: SearchPageProps) {
                 {!loading && !error && searchResults.length > 0 && (
                     searchResults.map((product: SearchProduct) => {
                         // Safely parse price and rating to numbers for the slash prop
-                        const priceString = product.product_price || (product as any).product_price; 
+                        const priceString = product.product_price || (product as any).product_price;
                         const parsedPrice = parseFloat(priceString?.replace(/[^0-9.-]+/g, "") || "0");
 
                         // Assuming product.rating is a number (e.g., 4.5)
                         const parsedRating = typeof product.rating === 'number' ? product.rating : parseFloat((product as any).product_star_rating?.split(' ')[0] || "0"); // Fallback to string rating if needed
 
-                       
+
 
                         const calculatedSlash = (parsedPrice && parsedRating) ?
                             Math.round(parsedPrice - parsedRating).toString() : '0'; // Default to '0' or ''
@@ -106,6 +113,8 @@ export default function SearchPage({ params }: SearchPageProps) {
                                 price={product.product_price || (product as any).product_price || 'N/A'} // Use raw price string or fallback
                                 image={product.product_photo}
                                 slash={calculatedSlash}
+                                asin={product.asin}
+
                             />
                         );
                     })
