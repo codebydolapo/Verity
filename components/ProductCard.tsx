@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Crown } from 'lucide-react';
-import truncateString from '@/lib/truncateString'; // Ensure this path is correct
+import truncateString from '@/lib/truncateString'; 
 
 interface ProductCardProps {
     title: string;
@@ -39,8 +39,6 @@ function ProductCard({ image, price, title, slash, asin, originalPrice }: Produc
     } else if (Math.random() < 0.2) { // 20% general chance for any product
         isBestSeller = true;
     }
-    // You can refine this logic based on your exact needs.
-    // For example, you could also factor in `product_star_rating` if you passed it down.
 
     // Calculate the displayed original price if not provided directly
     const displayedOriginalPrice = originalPriceValue > 0

@@ -14,7 +14,7 @@ import {
 } from "./ui/dropdown-menu"
 import { ChevronDown, Bell, ShoppingBasket } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation' // Make sure this is imported
+import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
 

@@ -75,7 +75,7 @@ export default function SearchPage() {
                 {/* Dark Overlay for text */}
                 <div className="absolute inset-0 bg-black opacity-40 z-10 h-full"></div>
 
-                <div className="z-20 flex flex-col items-center justify-center space-y-2 absolute top-0 h-full"> {/* Ensures text is above image and overlay */}
+                <div className="z-20 flex flex-col items-center justify-center space-y-2 absolute top-0 h-full">
                     <p className='md:text-md text-sm'>Search results for</p>
                     <h1 className='md:text-7xl text-5xl font-bold truncate capitalize'>{searchQuery || '...' || "some query"}</h1>
                     {totalResults !== null && (
@@ -97,8 +97,7 @@ export default function SearchPage() {
                     searchResults.map((product: SearchProduct) => {
                         // Safely parse price and rating to numbers for the slash prop
                         const priceString = product.product_price || (product as any).product_price;
-                        // const placeholder = "_"
-                        const parsedPrice = parseFloat(priceString?.replace(/[^0-9.-]+/g, " ") || "0");
+                        const parsedPrice = parseFloat(priceString?.replace(/[^0-9.-]+/g, "") || "0");
 
                         // Assuming product.rating is a number (e.g., 4.5)
                         const parsedRating = typeof product.rating === 'number' ? product.rating : parseFloat((product as any).product_star_rating?.split(' ')[0] || "0"); // Fallback to string rating if needed

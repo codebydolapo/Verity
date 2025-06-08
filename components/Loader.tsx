@@ -10,7 +10,7 @@ const Loader: React.FC<LoaderProps> = ({ color = '#1da1f2' }) => {
     <div className="flex items-center justify-center h-full">
       <div
         className="loader ease-linear rounded-full border-4 border-t-4 h-12 w-12"
-        style={{ borderTopColor: color, borderColor: `${color}40` }} // Add transparency to the border for a better effect
+        style={{ borderTopColor: color, borderColor: `${color}40` }}
       ></div>
       <style jsx>{`
         .loader {

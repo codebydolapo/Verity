@@ -1,4 +1,3 @@
-// pages/product/[asin]/page.tsx
 "use client";
 
 import { useProductDetails } from '@/hooks/useProductDetails';
@@ -7,14 +6,13 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Check, CheckCircle, Heart, Minus, Plus, Search, Star } from 'lucide-react';
-import Loader from '@/components/Loader'; // Import the Loader component
+import Loader from '@/components/Loader'; 
 import truncateString from '@/lib/truncateString';
 import calculateSubtotal from '@/lib/calculateSubtotal';
-import convertUsdToNgn from '@/lib/currencyConverter'; // <--- IMPORT THE NEW FUNCTION
-
-// Import Redux hooks and actions
+import convertUsdToNgn from '@/lib/currencyConverter'; 
+// Redux hooks and actions
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart, CartItem } from '@/store/cartSlice'; // Make sure the path is correct
+import { addToCart, CartItem } from '@/store/cartSlice'; 
 import { RootState } from '@/store';
 // import { ProductInformation } from '@/types/types';
 
@@ -69,7 +67,7 @@ export default function ProductDetailsPage() {
         if (product) {
             console.log(`Buying ${quantity} of "${product.product_title}" (ASIN: ${product.asin}) now.`);
             setShowBuyNowRedirect(true); // Show redirecting state
-            // In a real app, this would trigger a redirect to checkout
+
             setTimeout(() => {
                 setShowBuyNowRedirect(false); // Revert state
                 // window.location.href = '/checkout'; // Example redirect
@@ -98,7 +96,6 @@ export default function ProductDetailsPage() {
                 window.location.href = `/search/${encodeURIComponent(product.product_title)}`;
             }, 1000); // Short delay before redirect
         } else {
-            // If product title is missing, perhaps a subtle toast message or no feedback
             console.warn("Cannot find alternate products without a product title.");
         }
     };

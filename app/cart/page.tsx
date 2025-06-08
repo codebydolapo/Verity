@@ -1,16 +1,15 @@
-// src/app/cart/page.tsx
 "use client";
 
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '@/store'; // Adjust path as per your project
-import { removeFromCart, updateQuantity, CartItem } from '@/store/cartSlice'; // Adjust path as per your project
+import { RootState } from '@/store'; 
+import { removeFromCart, updateQuantity, CartItem } from '@/store/cartSlice';
 import Image from 'next/image';
 import { Minus, Plus, Trash2 } from 'lucide-react';
-import Link from 'next/link'; // Import Link for 'Continue Shopping'
+import Link from 'next/link'; 
 import truncateString from '@/lib/truncateString';
 import calculateSubtotal from '@/lib/calculateSubtotal';
-import convertUsdToNgn from '@/lib/currencyConverter'; // <--- IMPORT THE NEW FUNCTION
+import convertUsdToNgn from '@/lib/currencyConverter'; 
 
 export default function CartPage() {
     const dispatch = useDispatch();
@@ -68,7 +67,7 @@ export default function CartPage() {
     }
 
     return (
-        <div className="container mx-auto px-4 md:px-6 py-8 min-h-[calc(100vh-80px)]"> {/* Adjusted min-height for header/footer */}
+        <div className="container mx-auto px-4 md:px-6 py-8 min-h-[calc(100vh-80px)]"> 
             <h1 className="text-3xl md:text-4xl font-bold mb-6">Shopping Cart</h1>
 
             {/* Free Shipping / Cashback Banner */}

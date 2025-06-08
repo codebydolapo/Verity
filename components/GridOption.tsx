@@ -33,18 +33,14 @@ function GridOption({ title, image, imageStyle, containerStyle, titleStyle, desc
                 </div>
             </div>
             <div className='w-[50%] min-h-[90%] flex justify-center items-center flex-shrink-0 relative' style={{ position: "relative" }}>
-                {/* <div className='block'> */}
 
                 <Image
                     src={image} alt=""
-                    // style={{ objectFit: "contain" }}
                     width={0}
                     height={0}
-                    // objectFit="contain" // Keep aspect ratio, fit within bounds
                     className={`${imageStyle}`}
                     unoptimized
                 />
-                {/* </div> */}
             </div>
         </Link>
     )

@@ -21,7 +21,6 @@ export default function RecommendationCard({ product }: {product: Product}) {
                     style={{ objectFit: "contain" }}
                     width={0}
                     height={0}
-                    // objectFit="contain" // Keep aspect ratio, fit within bounds
                     className="min-w-[95%] min-h-[1rem] flex-1"
                     unoptimized
                 />
