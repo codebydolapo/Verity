@@ -9,6 +9,8 @@ import Image from 'next/image';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import Link from 'next/link'; // Import Link for 'Continue Shopping'
 import truncateString from '@/lib/truncateString';
+import calculateSubtotal from '@/lib/calculateSubtotal';
+import convertUsdToNgn from '@/lib/currencyConverter'; // <--- IMPORT THE NEW FUNCTION
 
 export default function CartPage() {
     const dispatch = useDispatch();
@@ -19,24 +21,25 @@ export default function CartPage() {
     const cashbackThreshold = 85; // Example: 3% cashback over $85
     const cashbackPercentage = 0.03; // 3%
 
-    const calculateSubtotal = () => {
-        return cartItems.reduce((total: number, item: CartItem) => {
-            // Ensure product_price is parsed correctly, remove currency symbols
-            const price = parseFloat(item.product_price?.replace(/[^0-9.-]+/g, "") || '0');
-            return total + (price * item.quantity);
-        }, 0);
-    };
-
-    const subtotal = calculateSubtotal();
+    const subtotal = calculateSubtotal(cartItems);
     const isFreeShipping = subtotal >= freeShippingThreshold;
     const isCashbackEligible = subtotal >= cashbackThreshold;
+
     const amountAwayFromFreeShipping = freeShippingThreshold - subtotal;
-    const amountAwayFromCashback = cashbackThreshold - subtotal;
+    // const amountAwayFromCashback = cashbackThreshold - subtotal;
     const earnedCashback = isCashbackEligible ? (subtotal * cashbackPercentage) : 0;
 
+    // Convert thresholds and other values to NGN for display
+    // const { ngnFormatted: freeShippingThresholdNgn } = convertUsdToNgn(freeShippingThreshold.toString());
+    const { ngnFormatted: cashbackThresholdNgn } = convertUsdToNgn(cashbackThreshold.toString());
+    const { ngnFormatted: amountAwayFromFreeShippingNgn } = convertUsdToNgn(amountAwayFromFreeShipping.toFixed(2));
+    // const { ngnFormatted: amountAwayFromCashbackNgn } = convertUsdToNgn(amountAwayFromCashback.toFixed(2));
+    const { usdFormatted: earnedCashbackUsd, ngnFormatted: earnedCashbackNgn } = convertUsdToNgn(earnedCashback.toFixed(2));
+
+
     // Calculate progress bar percentage
-    const shippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 100);
-    const cashbackProgress = Math.min(100, (subtotal / cashbackThreshold) * 100);
+    // const shippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 100);
+    // const cashbackProgress = Math.min(100, (subtotal / cashbackThreshold) * 100);
 
 
     const handleRemoveItem = (asin: string) => {
@@ -47,6 +50,10 @@ export default function CartPage() {
         if (newQuantity < 1) return; // Prevent quantity from going below 1
         dispatch(updateQuantity({ asin, quantity: newQuantity }));
     };
+
+    // Convert subtotal for display
+    const { usdFormatted: subtotalUsd, ngnFormatted: subtotalNgn } = convertUsdToNgn(subtotal.toFixed(2));
+
 
     if (cartItems.length === 0) {
         return (
@@ -68,11 +75,11 @@ export default function CartPage() {
             <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-lg mb-6 shadow-md flex flex-col md:flex-row items-center justify-between text-sm md:text-base">
                 <p className="text-center md:text-left mb-2 md:mb-0">
                     {isCashbackEligible ? (
-                        `Great! You have earned ${earnedCashback.toFixed(2)}% EXTRA CASHBACK!`
+                        `Great! You have earned ${earnedCashbackUsd} (${earnedCashbackNgn}) EXTRA CASHBACK!`
                     ) : isFreeShipping ? (
-                        `Great! You have been FREE SHIPPING, only $${(cashbackThreshold - subtotal).toFixed(2)} away from getting 3% EXTRA CASHBACK`
+                        `Great! You have FREE SHIPPING, only ${convertUsdToNgn((cashbackThreshold - subtotal).toFixed(2)).usdFormatted} (${convertUsdToNgn((cashbackThreshold - subtotal).toFixed(2)).ngnFormatted}) away from getting 3% EXTRA CASHBACK!`
                     ) : (
-                        `Great! You have been FREE SHIPPING, only $${amountAwayFromFreeShipping.toFixed(2)} away from getting FREE SHIPPING`
+                        `Spend ${convertUsdToNgn(amountAwayFromFreeShipping.toFixed(2)).usdFormatted} (${amountAwayFromFreeShippingNgn}) more to get FREE SHIPPING!`
                     )}
                 </p>
                 <div className="w-full md:w-1/2 lg:w-1/3 mt-3 md:mt-0 relative h-6 bg-white bg-opacity-20 rounded-full overflow-hidden">
@@ -88,7 +95,9 @@ export default function CartPage() {
                         <span className="text-xs text-black font-semibold">
                             {isCashbackEligible ? '3% CASHBACK' : ''}
                         </span>
-                         <span className="text-xs text-black font-semibold">$85</span> {/* Adjusted for $85 threshold */}
+                        <span className="text-xs text-black font-semibold">
+                            {convertUsdToNgn(cashbackThreshold.toString()).usdFormatted} ({cashbackThresholdNgn})
+                        </span> {/* Adjusted for $85 threshold */}
                     </div>
                 </div>
             </div>
@@ -107,10 +116,11 @@ export default function CartPage() {
                     <div className="text-center">Quantity</div>
                     <div className="text-right">Total</div>
                 </div>
-                
+
                 {cartItems.map((item: CartItem) => {
-                    const itemPrice = parseFloat(item.product_price?.replace(/[^0-9.-]+/g, "") || '0');
-                    const itemTotal = (itemPrice * item.quantity).toFixed(2);
+                    const { usdValue: itemPrice, usdFormatted: itemPriceUsd, ngnFormatted: itemPriceNgn } = convertUsdToNgn(item.product_price);
+                    const { usdFormatted: itemTotalUsd, ngnFormatted: itemTotalNgn } = convertUsdToNgn((itemPrice * item.quantity).toFixed(2));
+
                     return (
                         <div key={item.asin} className="grid grid-cols-[1.5fr_0.7fr_0.5fr_0.5fr] gap-4 p-4 border-b border-gray-100 items-center last:border-b-0">
                             <div className="flex items-center space-x-4">
@@ -132,7 +142,10 @@ export default function CartPage() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="text-center text-lg font-medium">${itemPrice.toFixed(2)}</div>
+                            <div className="text-center text-lg font-medium">
+                                {itemPriceUsd}
+                                <span className='text-sm font-light text-gray-500 block'>({itemPriceNgn})</span>
+                            </div>
                             <div className="flex items-center justify-center space-x-2">
                                 <button
                                     onClick={() => handleUpdateItemQuantity(item.asin, item.quantity - 1)}
@@ -149,7 +162,10 @@ export default function CartPage() {
                                     <Plus size={16} />
                                 </button>
                             </div>
-                            <div className="text-right text-lg font-bold">${itemTotal}</div>
+                            <div className="text-right text-lg font-bold">
+                                {itemTotalUsd}
+                                <span className='text-sm font-light text-gray-500 block'>({itemTotalNgn})</span>
+                            </div>
                         </div>
                     );
                 })}
@@ -158,8 +174,9 @@ export default function CartPage() {
             {/* Cart Items List - Mobile (single column cards) */}
             <div className="md:hidden space-y-4 min-h-[50vh]">
                 {cartItems.map((item: CartItem) => {
-                    const itemPrice = parseFloat(item.product_price?.replace(/[^0-9.-]+/g, "") || '0');
-                    const itemTotal = (itemPrice * item.quantity).toFixed(2);
+                    const { usdValue: itemPrice, usdFormatted: itemPriceUsd, ngnFormatted: itemPriceNgn } = convertUsdToNgn(item.product_price);
+                    const { usdFormatted: itemTotalUsd, ngnFormatted: itemTotalNgn } = convertUsdToNgn((itemPrice * item.quantity).toFixed(2));
+
                     return (
                         <div key={item.asin} className="bg-white rounded-lg shadow-md p-4 flex flex-col space-y-3">
                             <div className="flex items-center space-x-4">
@@ -184,7 +201,10 @@ export default function CartPage() {
                             <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
                                 <div className="flex-col">
                                     <p className="text-gray-600 text-sm">Price</p>
-                                    <p className="text-lg font-medium">${itemPrice.toFixed(2)}</p>
+                                    <p className="text-lg font-medium">
+                                        {itemPriceUsd}
+                                        <span className='text-sm font-light text-gray-500 block'>({itemPriceNgn})</span>
+                                    </p>
                                 </div>
                                 <div className="flex-col">
                                     <p className="text-gray-600 text-sm text-center">Quantity</p>
@@ -207,7 +227,10 @@ export default function CartPage() {
                                 </div>
                                 <div className="flex-col">
                                     <p className="text-gray-600 text-sm text-right">Total</p>
-                                    <p className="text-lg font-bold text-right">${itemTotal}</p>
+                                    <p className="text-lg font-bold text-right">
+                                        {itemTotalUsd}
+                                        <span className='text-sm font-light text-gray-500 block'>({itemTotalNgn})</span>
+                                    </p>
                                 </div>
                                 <button
                                     onClick={() => handleRemoveItem(item.asin)}
@@ -224,8 +247,12 @@ export default function CartPage() {
 
             {/* Subtotal and Buttons */}
             <div className="mt-8 flex flex-col md:flex-row justify-end items-center space-y-4 md:space-y-0 md:space-x-6">
-                <div className="text-right">
-                    <p className="text-xl font-semibold text-gray-800">Sub Total: <span className="text-2xl font-bold text-black">${subtotal.toFixed(2)}</span></p>
+                <div className="text-right flex flex-col items-center justify-around space-y-2">
+                    <p className="text-lg font-semibold text-gray-800">
+                        Sub Total:
+                        <span className="text-3xl font-bold text-black mx-2">{subtotalUsd}</span>
+                        <span className="text-md font-semibold text-gray-600 md:inline-block md:ml-2">({subtotalNgn})</span>
+                    </p>
                     <p className="text-sm text-gray-500">Excl. Tax and Delivery charge</p>
                 </div>
                 <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
