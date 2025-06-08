@@ -3,6 +3,7 @@ import "./globals.css";
 import { Poppins } from 'next/font/google'
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { ReduxProvider } from '../store/Provider';
 
 
 const poppins = Poppins({
@@ -25,9 +26,11 @@ export default function RootLayout({
       <body
         className={`${poppins.className} w-[100vw] overflow-x-hidden`}
       >
-        <Header />
-        {children}
-        <Footer />
+        <ReduxProvider>
+          <Header />
+          {children}
+          <Footer />
+        </ReduxProvider>
       </body>
     </html>
   );

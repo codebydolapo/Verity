@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchResults } from '@/hooks/useSearchResults';
 import { SearchProduct } from '@/types/types';
 import { usePathname } from 'next/navigation';
+import Loader from '@/components/Loader';
 
 interface SearchPageProps {
     params: { id: string };
@@ -13,7 +14,7 @@ interface SearchPageProps {
 
 export default function SearchPage({ params }: SearchPageProps) {
     const pathname = usePathname();
-      const initialQuery = pathname.split('/').pop() || "watches"; //remember to remove this
+    const initialQuery = pathname.split('/').pop() || "watches"; //remember to remove this
 
     // const initialQuery = params.id ? decodeURIComponent(params.id) : 'watches'; //remember to remove this
 
@@ -60,32 +61,37 @@ export default function SearchPage({ params }: SearchPageProps) {
 
 
     return (
-        <div className='min-h-[90vh] md:px-4 px-2'>
-            <div className='relative w-full min-h-[15rem] flex flex-col items-center justify-center space-y-2 text-white overflow-hidden'>
+        <div className='min-h-[90vh] md:px-4 px-2 '>
+            <div className='relative w-full md:h-[20rem] h-[13rem] flex flex-col items-center justify-center text-white'>
                 <Image
                     src="/images/searchBackground.jpeg"
                     alt="Search background"
-                    layout="fill"
-                    objectFit="cover"
-                    quality={100}
+                    // layout="fill"
+                    // objectFit="cover"
+                    // quality={100}
+                    width={0}
+                    height={0}
                     priority // Preload this image if it's above the fold
-                    className="z-0" // Ensure it's behind the text
+                    className="z-0 w-full h-full fill" // Ensure it's behind the text
+                    unoptimized
                 />
 
                 {/* Dark Overlay for text */}
-                <div className="absolute inset-0 bg-black opacity-20 z-10 h-full"></div>
+                <div className="absolute inset-0 bg-black opacity-40 z-10 h-full"></div>
 
-                <div className="relative z-20 flex flex-col items-center space-y-2"> {/* Ensures text is above image and overlay */}
-                    <p className='text-md'>Search results for</p>
-                    <h1 className='text-7xl font-bold truncate'>{searchQuery || '...'}</h1>
+                <div className="z-20 flex flex-col items-center justify-center space-y-2 absolute top-0 h-full"> {/* Ensures text is above image and overlay */}
+                    <p className='md:text-md text-sm'>Search results for</p>
+                    <h1 className='md:text-7xl text-5xl font-bold truncate capitalize'>{searchQuery || '...' || "some query"}</h1>
                     {totalResults !== null && (
-                        <p className='text-sm text-gray-200'>{totalResults} results found</p>
+                        <p className='md:text-sm text-xs text-gray-200'>{totalResults} results found</p>
                     )}
                 </div>
             </div>
 
             <div className='min-h-[50vh] flex flex-wrap items-center justify-around mt-4 md:p-4 p-2 md:gap-6 gap-3'>
-                {loading && <p className="text-center w-full">Loading search results...</p>}
+                {loading && <div className="flex justify-center items-center h-screen">
+                    <Loader color="#1da1f2" />
+                </div>}
                 {error && <p className="text-center w-full text-red-500">Error: {error}</p>}
                 {!loading && !error && searchResults.length === 0 && (
                     <p className="text-center w-full">No products found for "{searchQuery}".</p>
@@ -108,7 +114,7 @@ export default function SearchPage({ params }: SearchPageProps) {
 
                         return (
                             <ProductCard
-                                key={product.product_asin}
+                                key={product.asin}
                                 title={product.product_title}
                                 price={product.product_price || (product as any).product_price || 'N/A'} // Use raw price string or fallback
                                 image={product.product_photo}

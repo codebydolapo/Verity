@@ -11,6 +11,7 @@ import DiscountCard from "@/components/DiscountCard";
 import RecommendationCard from "@/components/RecommendationCard";
 import { useState } from "react";
 import recommendationData from "@/data/recommendationData";
+import Loader from "@/components/Loader"; // Import the new Loader component
 
 
 export default function Home() {
@@ -149,7 +150,11 @@ export default function Home() {
             </div>
             <Image src={"/images/samplePhones.png"} alt="" width={0} height={0} className='w-[60%] absolute -bottom-10 right-0' unoptimized />
           </Link>
-          {electronicsLoading && <p>Loading trending electronics...</p>}
+          {electronicsLoading && (
+            <div className="w-full flex justify-center items-center h-40">
+              <Loader color="#1da1f2" />
+            </div>
+          )}
           {electronicsError && <p className="text-red-500">Error: {electronicsError}</p>}
           {!electronicsLoading && !electronicsError && electronicsBestsellers.length === 0 && (
             <p>No trending electronics found.</p>
@@ -223,7 +228,11 @@ export default function Home() {
 
         <div className="w-full py-4 flex items-center justify-around overflow-x-scroll overflow-y-hidden scrollbar-hidden">
 
-          {fashionLoading && <p>Loading trending fashion items...</p>}
+          {fashionLoading && (
+            <div className="w-full flex justify-center items-center h-40">
+              <Loader color="#1da1f2" />
+            </div>
+          )}
           {fashionError && <p className="text-red-500">Error: {fashionError}</p>}
           {!fashionLoading && !fashionError && fashionBestsellers.length === 0 && (
             <p>No trending fashion found.</p>
@@ -256,11 +265,11 @@ export default function Home() {
         </div>
 
       </div>
-      {/*  */}
+      {/* */}
 
       {/* experimental */}
 
-      <div className="  text-black-700 p-8">
+      <div className="   text-black-700 p-8">
         <div className="mx-auto">
           <h2 className="text-xl font-semibold mb-6">Recommended for You</h2>
 
@@ -290,7 +299,7 @@ export default function Home() {
       </div>
 
 
-      {/*  */}
+      {/* */}
 
 
       {/* automotives section */}
@@ -306,7 +315,11 @@ export default function Home() {
 
         <div className="w-full py-4 flex items-center justify-around overflow-x-scroll overflow-y-hidden scrollbar-hidden">
 
-          {automotiveLoading && <p>Loading trending automotive items...</p>}
+          {automotiveLoading && (
+            <div className="w-full flex justify-center items-center h-40">
+              <Loader color="#1da1f2" />
+            </div>
+          )}
           {automotiveError && <p className="text-red-500">Error: {automotiveError}</p>}
           {!automotiveLoading && !automotiveError && automotiveBestsellers.length === 0 && (
             <p>No trending automotive deals found. </p>
@@ -339,7 +352,7 @@ export default function Home() {
         </div>
 
       </div>
-      {/*  */}
+      {/* */}
 
     </main>
   );

@@ -12,9 +12,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
-import { ChevronDown, ShoppingBag, Bell, Hamburger, Menu } from 'lucide-react'
+import { ChevronDown, ShoppingBag, Bell, ShoppingBasket } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation' // Make sure this is imported
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store'
 
 const Dropdown = () => {
     return (
@@ -36,6 +38,9 @@ const Dropdown = () => {
 }
 
 function Header() {
+
+      const cartItems = useSelector((state: RootState) => state.cart.items);
+    
     const [searchActive, setSearchActive] = useState(false)
 
     const router = useRouter()
@@ -74,9 +79,9 @@ function Header() {
                 </div>
                 <div className='h-full flex'>
                     <div className='flex items-center justify-around space-x-4'>
-                        <Link className='relative p-2' href="/basket">
-                            <ShoppingBag className='size-6 text-white' />
-                            <p className='absolute top-0 right-0 bg-green-600 text-white text-xs rounded-full px-[3px]'>2</p>
+                        <Link className='relative p-2' href="/cart">
+                            <ShoppingBasket className='size-6 text-white' />
+                            <p className='absolute top-0 right-0 bg-green-600 text-white text-xs rounded-full px-[3px]'>{cartItems.length}</p>
                         </Link>
                         <div className='relative p-2'>
                             <Bell className='size-6 text-white' />
@@ -105,8 +110,8 @@ function Header() {
                 </div>
                 <div className='h-full flex'>
                     <div className='flex items-center justify-around space-x-2'>
-                        <Link className='relative p-1' href="/basket">
-                            <ShoppingBag className='size-5 text-white' />
+                        <Link className='relative p-1' href="/cart">
+                            <ShoppingBasket className='size-5 text-white' />
                             <p className='absolute top-0 right-0 bg-green-600 text-white text-xs rounded-full px-[3px]'>2</p>
                         </Link>
                         <Link className='relative p-1' href="/">

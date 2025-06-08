@@ -1,72 +1,132 @@
-// src/app/products/[asin]/page.tsx
+// pages/product/[asin]/page.tsx
 "use client";
 
 import { useProductDetails } from '@/hooks/useProductDetails';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { usePathname } from 'next/navigation'; // Import usePathname
+import { usePathname } from 'next/navigation';
 import { Check, CheckCircle, Heart, Minus, Plus, Search, Star } from 'lucide-react';
+import Loader from '@/components/Loader'; // Import the Loader component
+import truncateString from '@/lib/truncateString';
+
+// Import Redux hooks and actions
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, CartItem } from '@/store/cartSlice'; // Make sure the path is correct
+import { RootState } from '@/store';
+// import { useSelector } from 'react-redux'; // If you want to display cart items here, you'd use this
 
 interface ProductDetailsPageProps {
-  // We can remove params if we are deriving asin from pathname,
-  // but keeping it for consistency in component signature is fine.
-  params: { asin?: string }; // Make optional if deriving from pathname
+  params: { asin?: string };
 }
 
 export default function ProductDetailsPage({ params }: ProductDetailsPageProps) {
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+
   const pathname = usePathname();
-  const asin = pathname.split('/').pop(); // Extracts 'asin' from '/products/some-asin'
+  const asin = pathname.split('/').pop();
 
-  // If you strictly want to use params:
-  // const asin = params.asin;
+  const { product, loading, error } = useProductDetails(asin || null);
 
-  const { product, loading, error } = useProductDetails(asin || null); // Pass null if asin is undefined
-
-  // State for quantity
   const [quantity, setQuantity] = useState<number>(1);
+  // State for button feedback
+  const [showAddToCartSuccess, setShowAddToCartSuccess] = useState(false);
+  const [showAddToWishlistSuccess, setShowAddToWishlistSuccess] = useState(false);
+  const [showBuyNowRedirect, setShowBuyNowRedirect] = useState(false);
+  const [showSearchRedirect, setShowSearchRedirect] = useState(false);
 
-  // Handlers for quantity
-  const handleQuantityChange = (change: number) => {
-    setQuantity(prev => Math.max(1, prev + change)); // Quantity should not go below 1
+  const calculateSubtotal = () => {
+    return cartItems.reduce((total: number, item: CartItem) => {
+      // Ensure product_price is parsed correctly, remove currency symbols
+      const price = parseFloat(item.product_price?.replace(/[^0-9.-]+/g, "") || '0');
+      return total + (price * item.quantity);
+    }, 0);
   };
 
-  // Dummy handlers for buttons (replace with actual logic later)
+  const subtotal = calculateSubtotal();
+
+
+  // Initialize dispatch
+  const dispatch = useDispatch();
+
+  const handleQuantityChange = (change: number) => {
+    setQuantity(prev => Math.max(1, prev + change));
+  };
+
   const handleAddToCart = () => {
     if (product) {
-      console.log(`Added ${quantity} of "${product.product_title}" (ASIN: ${product.asin}) to cart.`);
-      // Implement actual add to cart logic (e.g., context API, Redux, API call)
-      alert(`Added ${quantity} of "${product.product_title}" to cart!`);
+      const itemToAdd: CartItem = {
+        asin: product.asin,
+        product_title: product.product_title,
+        product_photo: product.product_photo,
+        product_price: product.product_price,
+        quantity: quantity,
+      };
+
+      dispatch(addToCart(itemToAdd));
+      console.log(`Dispatched: Added ${quantity} of "${product.product_title}" (ASIN: ${product.asin}) to cart.`);
+
+      // Show success feedback
+      setShowAddToCartSuccess(true);
+      setTimeout(() => {
+        setShowAddToCartSuccess(false);
+      }, 2000); // Revert after 2 seconds
     }
   };
 
   const handleBuyNow = () => {
     if (product) {
       console.log(`Buying ${quantity} of "${product.product_title}" (ASIN: ${product.asin}) now.`);
-      // Implement actual buy now logic (e.g., direct checkout)
-      alert(`Proceeding to buy ${quantity} of "${product.product_title}" now!`);
+      setShowBuyNowRedirect(true); // Show redirecting state
+      // In a real app, this would trigger a redirect to checkout
+      // For now, it's just a console log and a temporary visual cue
+      setTimeout(() => {
+        setShowBuyNowRedirect(false); // Revert state
+        // window.location.href = '/checkout'; // Example redirect
+      }, 1500);
     }
   };
 
   const handleAddToWishlist = () => {
     if (product) {
       console.log(`Added "${product.product_title}" to wishlist.`);
-      alert(`Added "${product.product_title}" to wishlist!`);
+
+      // Show success feedback
+      setShowAddToWishlistSuccess(true);
+      setTimeout(() => {
+        setShowAddToWishlistSuccess(false);
+      }, 2000); // Revert after 2 seconds
     }
   };
 
   const handleFindAlternateProducts = () => {
     if (product?.product_title) {
-      // Navigate to search page with product title as query
       console.log(`Searching for alternate products for: "${product.product_title}".`);
-      window.location.href = `/search/${encodeURIComponent(product.product_title)}`;
+      setShowSearchRedirect(true); // Show redirecting state
+      setTimeout(() => {
+        setShowSearchRedirect(false); // Revert state
+        window.location.href = `/search/${encodeURIComponent(product.product_title)}`;
+      }, 1000); // Short delay before redirect
     } else {
-      alert("Cannot find alternate products without a product title.");
+      // If product title is missing, perhaps a subtle toast message or no feedback
+      console.warn("Cannot find alternate products without a product title.");
     }
   };
 
+  // Parse the numeric rating for star display
+  const numericRating = product?.product_star_rating
+    ? parseFloat(product.product_star_rating.split(' ')[0])
+    : 0;
+
+  // Calculate the number of full stars (rounding down for simplicity)
+  const fullStars = Math.floor(numericRating);
+
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading product details...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader color="#1da1f2" />
+      </div>
+    );
   }
 
   if (error) {
@@ -78,7 +138,7 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
   }
 
   return (
-    <div className="mx-auto md:p-6 p-2">
+    <div className="mx-auto md:p-6 p-2 relative">
       <div className="flex flex-col md:flex-row gap-8">
         {/* Product Image */}
         <div className="md:w-1/2 md:h-[100vh] flex justify-center items-center bg-white rounded-lg p-4">
@@ -88,8 +148,6 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
               alt={product.product_title || 'Product Image'}
               width={0}
               height={0}
-              // layout="responsive"
-              // objectFit="contain"
               className="md:w-[60%] w-[90%] h-auto"
               priority
               unoptimized
@@ -99,7 +157,7 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
 
         {/* Product Information */}
         <div className="md:w-1/2 md:h-[100vh] overflow-y-scroll scrollbar-hidden md:px-4 px-2 space-y-4">
-          <h1 className="text-3xl font-bold text-[#1da1f2]">{product.product_title}</h1>
+          <h1 className="text-3xl font-bold text-[#1da1f2]">{truncateString(product.product_title, 55)}</h1>
           {product.product_byline && (
             <p className="text-gray-600 text-sm font-light"><Link href={product.product_byline_link || '#'} className="text-blue-600 hover:underline">{product.product_byline}</Link></p>
           )}
@@ -113,34 +171,24 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
             {product.product_availability && (
               <div className='flex space-x-2 '>
                 <CheckCircle className='size-4 text-green-500' />
-                <p className={`text-sm font-semibold text-green-600
-                 `}>
+                <p className={`text-sm font-semibold text-green-600`}>
                   {product.product_availability}
                 </p>
               </div>
             )}
           </div>
-          {/* {product.product_original_price && product.product_original_price !== "null" && (
-            <p className="text-lg text-gray-500 line-through">Original Price: {product.product_original_price}</p>
-          )} */}
 
           {product.product_star_rating && (
             <div className="flex items-center text-yellow-400">
-              <Star className='size-3 fill-yellow-400' />
-              <span className="text-md font-bold">{product.product_star_rating.split(' ')[0]}</span>
+              {/* Render stars based on fullStars */}
+              {Array.from({ length: fullStars }).map((_, i) => (
+                <Star key={i} className='size-4 fill-yellow-400 stroke-yellow-400' />
+              ))}
+              {/* Display the numerical rating */}
+              <span className="text-md font-bold ml-1">{product.product_star_rating.split(' ')[0]}</span>
               <span className="ml-2 text-gray-600 text-sm">({product.product_num_ratings} ratings)</span>
             </div>
           )}
-
-          {/* {product.product_availability && (
-            <div className='flex space-x-2 '>
-              <CheckCircle className='size-5 text-green-500' />
-              <p className={`text-lg font-semibold text-green-600
-                 `}>
-                {product.product_availability}
-              </p>
-            </div>
-          )} */}
 
           <div className='w-full py-8'>
             <div className="space-y-4">
@@ -152,7 +200,7 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
                     onClick={() => handleQuantityChange(-1)}
                     className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-300 hover:bg-gray-500 "
                     aria-label="Decrease quantity"
-                    disabled={quantity === 1} // Disable if quantity is 1
+                    disabled={quantity === 1}
                   >
                     <Minus size={16} />
                   </button>
@@ -171,15 +219,31 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 bg-[#1da0f2de] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#1da1f2] transition-colors shadow-md"
+                  className={`flex-1 flex items-center justify-center font-bold py-3 px-6 rounded-lg transition-colors shadow-md
+                                        ${showAddToCartSuccess
+                      ? 'bg-green-500 hover:bg-green-600 text-white'
+                      : 'bg-[#1da0f2de] hover:bg-[#1da1f2] text-white'
+                    }`}
+                  disabled={showAddToCartSuccess} // Disable while showing success
                 >
-                  ADD TO CART
+                  {showAddToCartSuccess ? (
+                    <>
+                      <Check size={20} className="mr-2" /> Added to Cart!
+                    </>
+                  ) : (
+                    "ADD TO CART"
+                  )}
                 </button>
                 <button
                   onClick={handleBuyNow}
-                  className="flex-1 border-2 border-[#1da1f2] text-black font-bold py-3 px-6 rounded-lg hover:bg-[#1da0f221] transition-colors shadow-sm"
+                  className={`flex-1 border-2 text-black font-bold py-3 px-6 rounded-lg transition-colors shadow-sm
+                                        ${showBuyNowRedirect
+                      ? 'border-gray-400 bg-gray-200 text-gray-700'
+                      : 'border-[#1da1f2] hover:bg-[#1da0f221]'
+                    }`}
+                  disabled={showBuyNowRedirect}
                 >
-                  BUY NOW
+                  {showBuyNowRedirect ? "REDIRECTING..." : "BUY NOW"}
                 </button>
               </div>
 
@@ -187,15 +251,35 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
               <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 text-gray-600 text-sm mt-4">
                 <button
                   onClick={handleAddToWishlist}
-                  className="flex items-center hover:text-blue-600 transition-colors group"
+                  className={`flex items-center hover:text-blue-600 transition-colors group
+                                        ${showAddToWishlistSuccess ? 'text-green-600' : ''}`}
+                  disabled={showAddToWishlistSuccess}
                 >
-                  <Heart size={18} className="mr-1 group-hover:text-red-500" /> Add to wishlist
+                  {showAddToWishlistSuccess ? (
+                    <>
+                      <Check size={18} className="mr-1" /> Added to Wishlist!
+                    </>
+                  ) : (
+                    <>
+                      <Heart size={18} className="mr-1 group-hover:text-red-500" /> Add to wishlist
+                    </>
+                  )}
                 </button>
                 <button
                   onClick={handleFindAlternateProducts}
-                  className="flex items-center hover:text-blue-600 transition-colors group"
+                  className={`flex items-center hover:text-blue-600 transition-colors group
+                                        ${showSearchRedirect ? 'text-gray-500' : ''}`}
+                  disabled={showSearchRedirect}
                 >
-                  <Search size={18} className="mr-1 group-hover:text-blue-500" /> Find alternate products
+                  {showSearchRedirect ? (
+                    <>
+                      <Search size={18} className="mr-1 animate-pulse" /> Searching...
+                    </>
+                  ) : (
+                    <>
+                      <Search size={18} className="mr-1 group-hover:text-blue-500" /> Find alternate products
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -225,7 +309,7 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
               <h2 className="text-xl font-semibold mt-4">Product Information:</h2>
               <table className="table-auto w-full text-left text-gray-700">
                 <tbody>
-                  {Object.entries(product.product_information).map(([key, value]) => (
+                  {Object.entries(product.product_information).map(([key, value]: any) => (
                     <tr key={key} className="border-t border-gray-200">
                       <td className="py-2 pr-4 font-medium">{key}:</td>
                       <td className="py-2">{value}</td>
@@ -247,6 +331,9 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
             </a>
           </div>
         </div>
+      </div>
+      <div className='fixed md:hidden flex w-[90%] h-[3.5rem] bottom-3 left-1/2 -translate-x-1/2 z-10 bg-[#1da1f2] rounded-xl items-center justify-center'>
+        <p className='text-sm text-white'>Total: <strong className='text-lg'>${subtotal}</strong></p>
       </div>
     </div>
   );

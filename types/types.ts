@@ -94,6 +94,7 @@ export interface SearchApiResponse {
  */
 export interface ProductInformation {
   // [key: string]: string; // Allows for any string key with a string value
+  // key?: string;
   asin: string;
   product_title: string;
   product_price: string;
