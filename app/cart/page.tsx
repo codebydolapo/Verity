@@ -189,7 +189,7 @@ export default function CartPage() {
                                     />
                                 )}
                                 <div className="flex-1">
-                                    <h2 className="font-semibold text-base">{truncateString(item.product_title, 50)}</h2>
+                                    <h2 className="font-semibold text-sm">{truncateString(item.product_title, 50)}</h2>
                                     <p className="text-gray-600 text-xs">Color: <span className="font-medium">Green-D</span></p> {/* Placeholder for color */}
                                     <p className="text-gray-600 text-xs">Size: <span className="font-medium">XL</span></p> {/* Placeholder for size */}
                                     <p className="text-green-600 text-xs font-semibold mt-1 flex items-center">
@@ -199,10 +199,10 @@ export default function CartPage() {
                             </div>
                             <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
                                 <div className="flex-col">
-                                    <p className="text-gray-600 text-sm">Price</p>
-                                    <p className="text-lg font-medium">
+                                    <p className="text-gray-600 text-xs">Price</p>
+                                    <p className="text-sm font-medium">
                                         {itemPriceUsd}
-                                        <span className='text-sm font-light text-gray-500 block'>({itemPriceNgn})</span>
+                                        <span className='text-xs font-light text-gray-500 block'>({itemPriceNgn})</span>
                                     </p>
                                 </div>
                                 <div className="flex-col">
@@ -225,10 +225,10 @@ export default function CartPage() {
                                     </div>
                                 </div>
                                 <div className="flex-col">
-                                    <p className="text-gray-600 text-sm text-right">Total</p>
-                                    <p className="text-lg font-bold text-right">
+                                    <p className="text-gray-600 text-xs text-right">Total</p>
+                                    <p className="text-sm font-bold text-right">
                                         {itemTotalUsd}
-                                        <span className='text-sm font-light text-gray-500 block'>({itemTotalNgn})</span>
+                                        <span className='text-xs font-light text-gray-500 block'>({itemTotalNgn})</span>
                                     </p>
                                 </div>
                                 <button
@@ -247,18 +247,18 @@ export default function CartPage() {
             {/* Subtotal and Buttons */}
             <div className="mt-8 flex flex-col md:flex-row justify-end items-center space-y-4 md:space-y-0 md:space-x-6">
                 <div className="text-right flex flex-col items-center justify-around space-y-2">
-                    <p className="text-lg font-semibold text-gray-800">
+                    <p className="md:text-lg text-sm font-semibold text-gray-800">
                         Sub Total:
-                        <span className="text-3xl font-bold text-black mx-2">{subtotalUsd}</span>
-                        <span className="text-md font-semibold text-gray-600 md:inline-block md:ml-2">({subtotalNgn})</span>
+                        <span className="md:text-3xl text-xl font-bold text-black mx-2">{subtotalUsd}</span>
+                        <span className="md:text-md text-sm font-semibold text-gray-600 md:inline-block md:ml-2">({subtotalNgn})</span>
                     </p>
-                    <p className="text-sm text-gray-500">Excl. Tax and Delivery charge</p>
+                    <p className="md:text-sm text-xs text-gray-500">Excl. Tax and Delivery charge</p>
                 </div>
                 <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
-                    <Link href="/" className="px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-100 text-center transition-colors">
+                    <Link href="/" className="text-md px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-100 text-center transition-colors">
                         CONTINUE SHOPPING
                     </Link>
-                    <button className="px-8 py-3 bg-[#1da1f2] text-white font-semibold rounded-lg hover:bg-[#156e9c] text-center transition-colors">
+                    <button className="text-md px-8 py-3 bg-[#1da1f2] text-white font-semibold rounded-lg hover:bg-[#156e9c] text-center transition-colors">
                         GO TO CHECKOUT
                     </button>
                 </div>

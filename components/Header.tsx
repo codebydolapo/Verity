@@ -112,7 +112,7 @@ function Header() {
                     <div className='flex items-center justify-around space-x-2'>
                         <Link className='relative p-1' href="/cart">
                             <ShoppingBasket className='size-5 text-white' />
-                            <p className='absolute top-0 right-0 bg-green-600 text-white text-xs rounded-full px-[3px]'>2</p>
+                            <p className='absolute top-0 right-0 bg-green-600 text-white text-xs rounded-full px-[3px]'>{cartItems.length}</p>
                         </Link>
                         <Link className='relative p-1' href="/">
                             <Bell className='size-5 text-white' />

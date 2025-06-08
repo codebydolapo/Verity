@@ -42,7 +42,7 @@ export function useSearchResults(query: string, page: number = 1): UseSearchResu
           setTotalResults(total);
           setLoading(false);
           console.log(`Using cached search data for "${query}" (page ${page}).`);
-    console.log("hello this is from a search cache")
+          console.log("hello this is from a search cache")
 
           return; // Exit, no API call needed
         } catch (e) {
@@ -70,7 +70,7 @@ export function useSearchResults(query: string, page: number = 1): UseSearchResu
           // 3. Cache the new data, including total results
           sessionStorage.setItem(cacheKey, JSON.stringify({ products, total: response.data.total_products })); // Use total_products from schema
           console.log(response.data.total_products)
-    console.log("hello this is from a search data fetch")
+          console.log("hello this is from a search data fetch")
 
         } else {
           setData([]); // No products found

@@ -150,7 +150,7 @@ export default function ProductDetailsPage() {
 
                 {/* Product Information */}
                 <div className="md:w-1/2 md:h-[100vh] overflow-y-scroll scrollbar-hidden md:px-4 px-2 space-y-4">
-                    <h1 className="text-3xl font-bold text-[#1da1f2]">{truncateString(product.product_title, 55)}</h1>
+                    <h1 className="md:text-3xl text-xl font-bold text-[#1da1f2]">{truncateString(product.product_title, 55)}</h1>
                     {product.product_byline && (
                         <p className="text-gray-600 text-sm font-light"><Link href={product.product_byline_link || '#'} className="text-blue-600 hover:underline">{product.product_byline}</Link></p>
                     )}
@@ -159,7 +159,7 @@ export default function ProductDetailsPage() {
 
                     <div className='flex items-end justify-start space-x-2'>
                         {product.product_price && (
-                            <p className="text-4xl font-extrabold text-black">
+                            <p className="md:text-4xl text-xl font-extrabold text-black">
                                 {productPriceUsd}
                                 {productPriceNgn && ( // Only show NGN if it's a valid conversion
                                     <span className='text-sm font-light text-gray-500 ml-2'>({productPriceNgn})</span>

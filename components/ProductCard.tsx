@@ -50,7 +50,7 @@ function ProductCard({ image, price, title, slash, asin, originalPrice }: Produc
     return (
         <Link
             className="group relative flex flex-col items-center justify-between
-                       w-full md:max-w-[16rem] md:min-w-[15rem] max-w-[42vw] min-w-[42vw] h-[22rem] md:h-[25rem]
+                       md:max-w-[16rem] md:min-w-[15rem] max-w-[50vw] min-w-[50vw] h-[22rem] md:h-[25rem]
                        bg-white rounded-xl shadow-lg hover:shadow-xl
                        md:mx-2 mx-1 overflow-hidden
                        transform transition-all duration-300 ease-in-out

@@ -73,7 +73,7 @@ export default function Home() {
 
         </div>
 
-        <div className="w-full h-[11rem] flex items-center justify-between mt-2 md:overflow-hidden overflow-x-scroll">
+        <div className="w-full h-[9rem] flex items-center justify-between mt-2 md:overflow-hidden overflow-x-scroll">
           <GridOption
             title="Hero Cameras"
             image="/images/sampleCamera.png"
