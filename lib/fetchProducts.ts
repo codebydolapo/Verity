@@ -1,6 +1,6 @@
 // Import your new types
-import { BestsellersApiResponse, ProductDetailsApiResponse, SearchApiResponse } from '../types/types';
-import { BestsellerProduct, SearchProduct } from '../types/types'; // Also import the item types for product arrays
+import { ProductDetailsApiResponse, SearchApiResponse } from '../types/types';
+// import { BestsellerProduct, SearchProduct } from '../types/types'; // Also import the item types for product arrays
 
 
 // Consider creating a separate file for API constants (e.g., `apiConfig.ts`)
@@ -133,12 +133,12 @@ export async function fetchSearchResults(query: string, page: number = 1): Promi
     try {
         const response = await fetch(url.toString(), options);
         if (!response.ok) {
-            let errorDetails = `API Error for search query '${query}': ${response.status} ${response.statusText}`;
+            const errorDetails = `API Error for search query '${query}': ${response.status} ${response.statusText}`;
             try {
                 const errorData = await response.json();
                 console.error(errorDetails, errorData);
             } catch (jsonError) {
-                console.error(errorDetails, "Could not parse error response as JSON.");
+                console.error(errorDetails, jsonError, "Could not parse error response as JSON.");
             }
             return null;
         }
@@ -189,12 +189,12 @@ export async function fetchProductDetails(asin: string): Promise<ProductDetailsA
   try {
     const response = await fetch(url.toString(), options);
     if (!response.ok) {
-      let errorDetails = `API Error for product details (ASIN: ${asin}): ${response.status} ${response.statusText}`;
+      const errorDetails = `API Error for product details (ASIN: ${asin}): ${response.status} ${response.statusText}`;
       try {
         const errorData = await response.json();
         console.error(errorDetails, errorData);
       } catch (jsonError) {
-        console.error(errorDetails, "Could not parse error response as JSON.");
+        console.error(errorDetails, jsonError, "Could not parse error response as JSON.");
       }
       return null;
     }

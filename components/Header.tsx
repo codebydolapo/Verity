@@ -12,7 +12,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
-import { ChevronDown, ShoppingBag, Bell, ShoppingBasket } from 'lucide-react'
+import { ChevronDown, Bell, ShoppingBasket } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation' // Make sure this is imported
 import { useSelector } from 'react-redux'

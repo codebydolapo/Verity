@@ -15,7 +15,7 @@ type Props = {
     category: string
 }
 
-function GridOption({ title, image, imageStyle, containerStyle, link, titleStyle, descriptionStyle, description, category }: Props) {
+function GridOption({ title, image, imageStyle, containerStyle, titleStyle, descriptionStyle, description, category }: Props) {
 
     return (
         <Link

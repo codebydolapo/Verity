@@ -4,7 +4,7 @@
 import { useProductDetails } from '@/hooks/useProductDetails';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { ReactNode, useState } from 'react';
+import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Check, CheckCircle, Heart, Minus, Plus, Search, Star } from 'lucide-react';
 import Loader from '@/components/Loader'; // Import the Loader component
@@ -16,7 +16,7 @@ import convertUsdToNgn from '@/lib/currencyConverter'; // <--- IMPORT THE NEW FU
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, CartItem } from '@/store/cartSlice'; // Make sure the path is correct
 import { RootState } from '@/store';
-import { ProductInformation } from '@/types/types';
+// import { ProductInformation } from '@/types/types';
 
 
 export default function ProductDetailsPage() {

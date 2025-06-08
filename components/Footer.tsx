@@ -34,7 +34,7 @@ function Footer() {
                         </button>
                     </div>
                 </div>
-                <p className='text-white font-extralight text-[0.6rem] mt-6'>Only fill if you agree to Verity's Privacy and Cookie Policy. You can unsubscribe from newsletters at any time.</p>
+                <p className='text-white font-extralight text-[0.6rem] mt-6'>Only fill if you agree to Verity&apos;s Privacy and Cookie Policy. You can unsubscribe from newsletters at any time.</p>
 
             </div>
             <div className="md:w-1/3 w-full h-full flex flex-col items-center justify-center">

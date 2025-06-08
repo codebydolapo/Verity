@@ -2,7 +2,16 @@ import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
-function DiscountCard({ backgroundColor, discount, title, image, category }: any) {
+interface DiscountProps{
+    backgroundColor: string;
+    discount: string;
+    title: string;
+    image: string;
+    category: string;
+
+}
+
+function DiscountCard({ backgroundColor, discount, title, image, category }: DiscountProps) {
     return (
         <Link href={{
             pathname: "/search",

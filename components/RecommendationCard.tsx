@@ -2,8 +2,10 @@
 import { ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import {Product} from '@/data/recommendationData';
 
-export default function RecommendationCard({ product }: any) {
+
+export default function RecommendationCard({ product }: {product: Product}) {
     return (
         <Link className="bg-gray-800 rounded-lg shadow-md overflow-hidden flex items-center p-4"
             href={{

@@ -8,11 +8,7 @@ import { SearchProduct } from '@/types/types';
 import { usePathname } from 'next/navigation';
 import Loader from '@/components/Loader';
 
-interface SearchPageProps {
-    params: { id: string };
-}
-
-export default function SearchPage({ params }: SearchPageProps) {
+export default function SearchPage() {
     const pathname = usePathname();
     const initialQuery = pathname.split('/').pop() || "watches"; //remember to remove this
 
@@ -94,14 +90,15 @@ export default function SearchPage({ params }: SearchPageProps) {
                 </div>}
                 {error && <p className="text-center w-full text-red-500">Error: {error}</p>}
                 {!loading && !error && searchResults.length === 0 && (
-                    <p className="text-center w-full">No products found for "{searchQuery}".</p>
+                    <p className="text-center w-full">No products found for &quot;{searchQuery}&quot;.</p>
                 )}
 
                 {!loading && !error && searchResults.length > 0 && (
                     searchResults.map((product: SearchProduct) => {
                         // Safely parse price and rating to numbers for the slash prop
                         const priceString = product.product_price || (product as any).product_price;
-                        const parsedPrice = parseFloat(priceString?.replace(/[^0-9.-]+/g, "") || "0");
+                        // const placeholder = "_"
+                        const parsedPrice = parseFloat(priceString?.replace(/[^0-9.-]+/g, " ") || "0");
 
                         // Assuming product.rating is a number (e.g., 4.5)
                         const parsedRating = typeof product.rating === 'number' ? product.rating : parseFloat((product as any).product_star_rating?.split(' ')[0] || "0"); // Fallback to string rating if needed

@@ -1,5 +1,5 @@
 // If you're using TypeScript, it's good practice to define the types
-interface Product {
+export interface Product {
     id: number;
     name: string;
     price: number;
@@ -8,7 +8,7 @@ interface Product {
     image: string;
 }
 
-interface RecommendationData {
+export interface RecommendationData {
     [key: string]: Product[];
 }
 

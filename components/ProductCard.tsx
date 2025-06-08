@@ -2,7 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Crown } from 'lucide-react';
-import { SearchProduct, BestsellerProduct } from '@/types/types'; // Import your product types
 import truncateString from '@/lib/truncateString'; // Ensure this path is correct
 
 interface ProductCardProps {
